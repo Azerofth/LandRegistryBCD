@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/commons-codec-1.15/commons-codec-1.15.jar"/>
+	<classpathentry kind="lib" path="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/commons-codec-1.15/commons-codec-1.15-javadoc.jar"/>
+	<classpathentry kind="lib" path="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/commons-codec-1.15/commons-codec-1.15-sources.jar"/>
+	<classpathentry kind="lib" path="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/commons-codec-1.15/commons-codec-1.15-tests.jar"/>
+	<classpathentry kind="lib" path="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/commons-codec-1.15/commons-codec-1.15-test-sources.jar"/>
+	<classpathentry kind="lib" path="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/gson-2.6.2/gson-2.6.2.jar" sourcepath="D:/APU/Degree/Year 3 - Sem 1/BCD Blockchain Development/Lab/gson-2.6.2/gson-2.6.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/APU/Degree/Year%203%20-%20Sem%201/BCD%20Blockchain%20Development/Lab/gson-2.6.2/gson-2.6.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
