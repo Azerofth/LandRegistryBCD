@@ -20,10 +20,11 @@ public class admin {
 
 	    switch (choice) {
 	        case 1:
+	        	//mode == 000, admin use
 	            //manageUser();
 	        			// USER
-	        			// registerUser	: reuse Main's register (modify param)
-	        			// modifyUser	: new feature in manageUser
+	        			// addUser(int mode)	: reuse Main's register (modify param)
+	        			// modifyUser(int mode)	: new feature in manageUser
 	        			// deleteUser	: new feature in manageUser
 	            break;
 	        case 2:

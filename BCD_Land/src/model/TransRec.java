@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import misc.*;
 
@@ -11,7 +12,7 @@ public class TransRec implements Serializable{
 	private int landID;
 	private int buyerID;
 	private int sellerID;
-	private Date recDate;
+	private Timestamp recDate;
 	private double amount;
 	private paymentMethod paymentMethod;
 	private transType transType;
@@ -21,7 +22,7 @@ public class TransRec implements Serializable{
 		
 	}
 
-	public TransRec(int transID, int landID, int buyerID, int sellerID, Date recDate, double amount,
+	public TransRec(int transID, int landID, int buyerID, int sellerID, Timestamp recDate, double amount,
 			misc.paymentMethod paymentMethod, misc.transType transType, misc.tranStatus tranStatus) {
 		super();
 		this.transID = transID;
@@ -67,11 +68,11 @@ public class TransRec implements Serializable{
 		this.sellerID = sellerID;
 	}
 
-	public Date getRecDate() {
+	public Timestamp getRecDate() {
 		return recDate;
 	}
 
-	public void setRecDate(Date recDate) {
+	public void setRecDate(Timestamp recDate) {
 		this.recDate = recDate;
 	}
 

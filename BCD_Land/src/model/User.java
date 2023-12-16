@@ -99,7 +99,8 @@ public class User implements Serializable{
     
     @Override
     public String toString() {
-        return "User{" + "userID=" + userID + 
+        return 
+        		"User{\n" + "userID=" + userID + 
                 ", userType=" + userType + 
                 ", username=" + username + 
                 ", password=" + password + 

@@ -1,7 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @SuppressWarnings("serial")
 public class LandInfo implements Serializable {
@@ -11,7 +11,7 @@ public class LandInfo implements Serializable {
 	private double landVolume;
 	private int yearOfCon;
 	private int owner;
-	private Date regDate;
+	private Timestamp regDate;
 	private int landCond; 	//0 to 5
 	private double value;
 	
@@ -19,7 +19,7 @@ public class LandInfo implements Serializable {
 		
 	}
 
-	public LandInfo(int landID, double landArea, double landHeight, double landVolume, int yearOfCon, int owner, Date regDate, int landCond, double value) {
+	public LandInfo(int landID, double landArea, double landHeight, double landVolume, int yearOfCon, int owner, Timestamp regDate, int landCond, double value) {
 		super();
 		this.landID = landID;
 		this.landArea = landArea;
@@ -80,11 +80,11 @@ public class LandInfo implements Serializable {
 		this.owner = owner;
 	}
 
-	public Date getRegDate() {
+	public Timestamp getRegDate() {
 		return regDate;
 	}
 
-	public void setRegDate(Date regDate) {
+	public void setRegDate(Timestamp regDate) {
 		this.regDate = regDate;
 	}
 
