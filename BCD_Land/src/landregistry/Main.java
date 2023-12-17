@@ -1,5 +1,7 @@
 package landregistry;
 
+import java.util.List;
+
 // includes 
 //		- main menu
 //		- login
@@ -9,28 +11,30 @@ package landregistry;
 
 import java.util.Scanner;
 
+import enuum.userType;
+import handler.FileHandler;
+import handler.userHandler;
 import z.admin.*;
 import z.customer.*;
-import misc.userType;
 import model.User;
 
 public class Main {
 	static boolean isRunning = true;
-	
-	//static 
+	private static final String USER_FILE = "user.txt";
+	private static User currentUser = null;
 	
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         
         while (isRunning) {
-            welcomeMenu(scanner);
+            welcomeMenu();
         }
-
-        scanner.close();
     }
 
-    private static void welcomeMenu(Scanner scanner) {
+    private static void welcomeMenu() {
+    	Scanner scanner = new Scanner(System.in);
+    	
         System.out.println("Welcome to the Land Registration System!");
+        System.out.println("-".repeat(50));
         System.out.println("1. Login");
         System.out.println("2. Register");
         System.out.println("3. Exit");
@@ -38,13 +42,15 @@ public class Main {
         
         int choice = scanner.nextInt();
         scanner.nextLine(); // Consume the newline character
+        
+        //scanner.close();
 
         switch (choice) {
             case 1:
-                login(scanner);
+                login();
                 break;
             case 2:
-                register(scanner);
+                register();
                 break;
             case 3:
                 isRunning = false;
@@ -56,56 +62,73 @@ public class Main {
 
     }
     
-    private static void login(Scanner scanner) {
-    	customer customer = new customer();
-    	admin admin = new admin();
+    public static void login() {
+    	userHandler uh = new userHandler();
+    	customer cus = new customer();
+    	admin ad = new admin();
     	
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
         
-        //modify here for setting username pass, db? txt?
-        if (username.equals("cust1") && password.equals("pass")) {
-            String loggedInUser = username;
-            System.out.println("Login successful. Welcome, " + loggedInUser + "!");
-            
-//            if (User.getUserType().equals(userType.CUSTOMER)) {
-//            	
-//            }
-            
-            customer.customerMenu();
-            
-            admin.adminMenu();
+        System.out.println("\n\nLogin");
+        System.out.println("-".repeat(50));
+        
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        //scanner.close();
+        // Check if the entered credentials are valid
+        User user = validateUser(username, password);
+        uh.setCurrentUser(user);
+        
+        if (user != null) {
+            System.out.println("Login successful!\n\n");
+            currentUser = user;
+
+            // Redirect to the appropriate menu based on userType
+            if (user.getUserType() == userType.ADMIN) {
+                ad.adminMenu(currentUser);
+            } else {
+                cus.customerMenu(currentUser);
+            }
         } else {
-            System.out.println("Invalid username or password. Login failed.");
+            System.out.println("Invalid username or password. Login failed.\n\n");
+            // You can add additional logic here, e.g., prompt the user to try again.
         }
     }
 
-    private static void register(Scanner scanner) {
-    	//generate userID auto
-    	int userID = 1;
-    	//set user type
-    	//fix later
-    	userType userType = misc.userType.CUSTOMER;
-    	
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
-        System.out.print("Age: ");
-        int age = scanner.nextInt();
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
-        System.out.print("Phone Number: ");
-        String phoneNumber = scanner.nextLine();
-        System.out.print("Occupation: ");
-        String occupation = scanner.nextLine();
-        
-        // add logic to store the new username and password
-        User newUser = new User(userID, userType, username, password, age, email, phoneNumber, occupation);
+    private static User validateUser(String username, String password) {
+        List<User> users = FileHandler.readData(USER_FILE);
 
-        System.out.println("Registration successful. You can now login with your new credentials.");
+        for (User user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return user; // Valid credentials
+            }
+        }
+
+        return null; // Invalid credentials
     }
+    
+    
+    private static void register() {
+    	//Scanner scanner = new Scanner(System.in);
+    	
+    	System.out.println("\n\nRegister User");
+    	System.out.println("-".repeat(50));
+    	
+    	userHandler userHandler = new userHandler();
 
+    	userHandler.addUser(1);
+
+        System.out.println("You can now login with your new credentials.");
+        //scanner.close();
+    }
+    
+    public boolean logout() {
+	        currentUser = null;
+	        System.out.println("Logout successful!\n\n\n");
+        return false;
+    }
 }

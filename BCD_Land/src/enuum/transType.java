@@ -1,4 +1,4 @@
-package misc;
+package enuum;
 
 public enum transType {
 	CONVEYANCE,				// between buyer n seller

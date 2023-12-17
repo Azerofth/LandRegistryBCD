@@ -4,29 +4,58 @@ import model.User;
 import java.util.List;
 import java.util.Scanner;
 
-import misc.userType;
+import enuum.userType;
 
 public class userHandler {
 
-    private static final String USER_FILE = "users.txt";
+    private static final String USER_FILE = "user.txt";
 
+    //Set current logged in user
+    
+    private static User currentUser;  // Variable to store the currently logged-in user
+    
+    public void displayCurrentUser() {
+        if (currentUser != null) {
+        	System.out.println("\n\n");
+        	System.out.println("*".repeat(50));
+            System.out.println("Current User Information:");
+            System.out.printf("User ID\t:"+ currentUser.getUserID()+
+            		"\nUsername\t\t:"+ currentUser.getUsername()+ 
+            		"\nPassword\t\t:"+ currentUser.getPassword()+ 
+            		"\nAge\t\t\t:"+ currentUser.getAge()+
+            		"\nEmail\t\t\t:"+ currentUser.getEmail()+
+            		"\nPhone Number\t\t:"+ currentUser.getPhoneNo()+
+            		"\nOccupation\t\t:"+ currentUser.getOccupation() + "\n");
+            System.out.println("*".repeat(50));
+            System.out.println("\n\n");
+        } else {
+            System.out.println("No user is currently logged in.");
+        }
+    }
+
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
+    
+    //--------------------------------------------------
+    
     public static List<User> readUsers() {
         return FileHandler.readData(USER_FILE);
     }
-
-    public static void printUser() {
+    
+    public void printUser() {
         List<User> users = readUsers();
-        System.out.printf("%" + 50 + "s%s%n", "", "User");
-        System.out.println("-".repeat(150));
+        System.out.printf("\n\n%" + 50 + "s%s%n", "", "User");
+        System.out.println("-".repeat(130));
         System.out.printf("%-6s | %-10s | %-15s | %-15s | %-3s | %-20s | %-15s | %-15s%n",
                 "UserID", "UserType", "Username", "Password", "Age", "Email", "Phone Number", "Occupation");
-        System.out.println("-".repeat(150));
+        System.out.println("-".repeat(130));
         for (User user : users) {
             System.out.printf("%-6d | %-10s | %-15s | %-15s | %-3d | %-20s | %-15s | %-15s%n",
                     user.getUserID(), user.getUserType(), user.getUsername(), user.getPassword(), user.getAge(),
                     user.getEmail(), user.getPhoneNo(), user.getOccupation());
         }
-        System.out.println("-".repeat(150));
+        System.out.println("-".repeat(130));
     }
 
     private static int generateNewUserID(List<User> users) {
@@ -40,23 +69,21 @@ public class userHandler {
          return maxUserID + 1;
      }
     
-    public static void addUser(int mode) {
+    public void addUser(int mode) {
+    	
+        Scanner scanner = new Scanner(System.in);
+
+        List<User> users = readUsers();
     	
     	if (mode == 1) {
     		//customer use
     	} else {
-    		printUser();	//admin use
+    		//printUser();	//admin use
     	}
-    	
-        Scanner scanner = new Scanner(System.in);
-
-        // Collect user details from user input
-        // Collect other user details in a similar manner
-        List<User> users = readUsers();
-
+        
         int userID = generateNewUserID(users);
-        userType userType = misc.userType.CUSTOMER;  // Only 1 admin
-
+        userType userType = enuum.userType.CUSTOMER;  // Only 1 admin
+        
         System.out.print("Username: ");
         String username = scanner.nextLine();
         System.out.print("Password: ");
@@ -79,81 +106,88 @@ public class userHandler {
 
         // Add the new user to the list
         FileHandler.addObject(newUser, USER_FILE);
-        System.out.println("User added successfully.");
+        System.out.println("New user registered successfully.");
     }
 
-	public static void modifyUser(int mode) {
-	    Scanner scanner = new Scanner(System.in);
+    public void modifyUser(int mode) {
+        Scanner scanner = new Scanner(System.in);
+        User userToModify = null;
+        User updatedUser = null;
+        String userInputToModify = null;
+        
+        // Display existing users for reference
+        List<User> users = readUsers();
 
-	    // Display existing users for reference
-	    List<User> users = readUsers();
-	    
-    	if (mode == 1) {
-    		//customer use
-    	} else {
-    		printUser();	//admin use
-    	}
+        if (mode == 1) {
+        	userInputToModify = currentUser.getUsername();
+            displayCurrentUser();
+            //customer use
+        } else {
+            printUser(); //admin use
 
-	    // Collect user input for the user to modify
-	    System.out.print("Enter the username or user ID to modify: ");
-	    String userInputToModify = scanner.nextLine();
+            // Collect user input for the user to modify
+            System.out.print("Enter the username or user ID to modify: ");
+            userInputToModify = scanner.nextLine();
+        }
 
-	    // Find the user with the specified username or user ID
-	    User userToModify = null;
-	    for (int i = 0; i < users.size(); i++) {
-	        User user = users.get(i);
-	        if (String.valueOf(user.getUserID()).equals(userInputToModify) || user.getUsername().equals(userInputToModify)) {
-	            userToModify = user;
-	            break;
-	        }
-	    }
+        // Find the user with the specified username or user ID
+        userToModify = null;
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (String.valueOf(user.getUserID()).equals(userInputToModify) || user.getUsername().equals(userInputToModify)) {
+                userToModify = user;
+                break;
+            }
+        }
+        
+        if (userToModify != null) {
+            // Collect updated user details from user input
+            System.out.print("\nNew username\t\t: ");
+            String newUsername = scanner.nextLine();
+            System.out.print("New password\t\t: ");
+            String newPassword = scanner.nextLine();
+            System.out.print("New age\t\t\t: ");
+            int newAge = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("New email\t\t: ");
+            String newEmail = scanner.nextLine();
+            System.out.print("New phone number\t: ");
+            String newPhoneNumber = scanner.nextLine();
+            System.out.print("New occupation\t\t: ");
+            String newOccupation = scanner.nextLine();
 
-	    if (userToModify != null) {
-	        // Collect updated user details from user input
-	        System.out.print("Enter new username: ");
-	        String newUsername = scanner.nextLine();
-	        System.out.print("Enter new password: ");
-	        String newPassword = scanner.nextLine();
-	        System.out.print("Enter new age: ");
-	        int newAge = scanner.nextInt();
+            // Create a new user object with updated details
+            updatedUser = new User(
+                    userToModify.getUserID(),
+                    userToModify.getUserType(),
+                    newUsername,
+                    newPassword,
+                    newAge,
+                    newEmail,
+                    newPhoneNumber,
+                    newOccupation
+            );
+            
+            // Replace the old user with the updated user in the list
+            users.set(users.indexOf(userToModify), updatedUser);
+            // Write the updated user list to the file
+            FileHandler.writeData(users, USER_FILE);
 
-	        // Consume the newline character left in the buffer
-	        scanner.nextLine();
+            System.out.println("User modified successfully.");
+            System.out.println(updatedUser);
+            printUser(); // Display updated user list
+        } else {
+            System.out.println("User not found.");
+        }
 
-	        System.out.print("Enter new email: ");
-	        String newEmail = scanner.nextLine();
-	        System.out.print("Enter new phone number: ");
-	        String newPhoneNumber = scanner.nextLine();
-	        System.out.print("Enter new occupation: ");
-	        String newOccupation = scanner.nextLine();
-
-	        // Create a new user object with updated details
-	        User updatedUser = new User(
-	                userToModify.getUserID(),
-	                userToModify.getUserType(),
-	                newUsername,
-	                newPassword,
-	                newAge,
-	                newEmail,
-	                newPhoneNumber,
-	                newOccupation
-	        );
-
-	        // Replace the old user with the updated user in the list
-	        users.set(users.indexOf(userToModify), updatedUser);
-
-	        // Write the updated user list to the file
-	        FileHandler.writeData(users, USER_FILE);
-
-	        System.out.println("User modified successfully.");
-	        System.out.println(updatedUser);
-	        printUser();  // Display updated user list
-	    } else {
-	        System.out.println("User not found.");
-	    }
-	}
+        if (mode == 1) {
+            currentUser = updatedUser;
+            displayCurrentUser();
+            //customer use
+        }
+    }
     
-	public static void deleteUser() {
+	public void deleteUser() {
         Scanner scanner = new Scanner(System.in);
 
         List<User> users = readUsers();
@@ -184,14 +218,4 @@ public class userHandler {
             System.out.println("User not found.");
         }
     }
-
-//testing purpose
-    public static void main(String[] args) {
-////    all working now
-//    	printUser();
-//    	addUser(000);
-//    	deleteUser();
-//      modifyUser(000);
-    }
 }
-

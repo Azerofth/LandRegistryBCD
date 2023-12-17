@@ -1,4 +1,4 @@
-package misc;
+package enuum;
 
 public enum landStatus {
 	OWNED,				// seller buyer

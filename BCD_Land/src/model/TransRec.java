@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-import misc.*;
+import enuum.*;
 
 @SuppressWarnings("serial")
 public class TransRec implements Serializable{
@@ -23,7 +23,7 @@ public class TransRec implements Serializable{
 	}
 
 	public TransRec(int transID, int landID, int buyerID, int sellerID, Timestamp recDate, double amount,
-			misc.paymentMethod paymentMethod, misc.transType transType, misc.tranStatus tranStatus) {
+			enuum.paymentMethod paymentMethod, enuum.transType transType, enuum.tranStatus tranStatus) {
 		super();
 		this.transID = transID;
 		this.landID = landID;

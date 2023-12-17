@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-import misc.landStatus;
+import enuum.landStatus;
 
 @SuppressWarnings("serial")
 public class LandRec implements Serializable{
@@ -18,7 +18,7 @@ public class LandRec implements Serializable{
 		
 	}
 
-	public LandRec(int recID, int landID, int pastOwner, int buyer, String prevUse, int transID, misc.landStatus landStatus) {
+	public LandRec(int recID, int landID, int pastOwner, int buyer, String prevUse, int transID, enuum.landStatus landStatus) {
 		super();
 		this.recID = recID;
 		this.landID = landID;
@@ -81,7 +81,7 @@ public class LandRec implements Serializable{
 		return landStatus;
 	}
 
-	public void setStatus(misc.landStatus landStatus) {
+	public void setStatus(enuum.landStatus landStatus) {
 		this.landStatus = landStatus;
 	}
 

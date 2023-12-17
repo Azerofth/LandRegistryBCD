@@ -5,7 +5,7 @@ package model;
 
 import java.io.Serializable;
 
-import misc.userType;
+import enuum.userType;
 
 @SuppressWarnings("serial")
 public class User implements Serializable{
