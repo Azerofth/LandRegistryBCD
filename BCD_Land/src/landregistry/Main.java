@@ -86,7 +86,6 @@ public class Main {
         if (user != null) {
             System.out.println("Login successful!\n\n");
             currentUser = user;
-
             // Redirect to the appropriate menu based on userType
             if (user.getUserType() == userType.ADMIN) {
                 ad.adminMenu(currentUser);
@@ -95,7 +94,6 @@ public class Main {
             }
         } else {
             System.out.println("Invalid username or password. Login failed.\n\n");
-            // You can add additional logic here, e.g., prompt the user to try again.
         }
     }
 

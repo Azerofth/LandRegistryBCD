@@ -12,7 +12,7 @@ public class userHandler {
 
     //Set current logged in user
     
-    private static User currentUser;  // Variable to store the currently logged-in user
+    public User currentUser;  // Variable to store the currently logged-in user
     
     public void displayCurrentUser() {
         if (currentUser != null) {
