@@ -3,11 +3,11 @@ package z.admin;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import handler.userHandler;
+import handler.UserHandler;
 
 public class manageUser {
 	Scanner scanner = new Scanner(System.in);
-	userHandler uh = new userHandler();
+	UserHandler uh = new UserHandler();
 	
 	void manageUserMenu(){
 	   	boolean muIsRunning = true;

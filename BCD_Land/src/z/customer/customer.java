@@ -3,7 +3,8 @@ package z.customer;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
-import handler.userHandler;
+import handler.LandInfoHandler;
+import handler.UserHandler;
 import landregistry.Main;
 import model.User;
 
@@ -12,11 +13,13 @@ public class customer {
 	
 	static boolean isRunning = true;
 	Scanner scanner = new Scanner(System.in);
-	userHandler uh = new userHandler();
+	UserHandler uh = new UserHandler();
+	LandInfoHandler lih = new LandInfoHandler();
 	Main main = new Main();
 	
-	public void customerMenu(User currentUser) 
+	public void customerMenu() 
 	{
+    	User currentUser = uh.getCurrentUser();
 		while (isRunning) {		
 			try {
 				System.out.println("Welcome, " + currentUser.getUsername());
@@ -40,7 +43,7 @@ public class customer {
 				    	uh.modifyUser(1);
 				        break;
 				    case 2:
-				        //registerLand();
+				    	lih.addLandInfo(1);
 				    			// input landInfo
 				        break;
 				    case 3:

@@ -1,6 +1,7 @@
 package enuum;
 
-public enum tranStatus {
+public enum status {
 	PENDING,	//made transaction and waiting for approval
-	COMPLETE
+	COMPLETE,
+	REMOVED
 }

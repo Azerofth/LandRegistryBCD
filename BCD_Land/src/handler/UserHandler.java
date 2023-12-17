@@ -6,13 +6,11 @@ import java.util.Scanner;
 
 import enuum.userType;
 
-public class userHandler {
-
+public class UserHandler {
     private static final String USER_FILE = "user.txt";
 
     //Set current logged in user
-    
-    public User currentUser;  // Variable to store the currently logged-in user
+    public User currentUser = new User();   // Variable to store the currently logged-in user
     
     public void displayCurrentUser() {
         if (currentUser != null) {
@@ -34,7 +32,13 @@ public class userHandler {
     }
 
     public void setCurrentUser(User user) {
+    	System.out.println("Setting currentUser to: " + user);
         currentUser = user;
+    }
+    
+    public User getCurrentUser() {
+    	System.out.println(currentUser);
+        return currentUser;
     }
     
     //--------------------------------------------------
@@ -44,14 +48,14 @@ public class userHandler {
     }
     
     public void printUser() {
-        List<User> users = readUsers();
+        List<User> users = readUsers();				//will re-read everytime
         System.out.printf("\n\n%" + 50 + "s%s%n", "", "User");
         System.out.println("-".repeat(130));
-        System.out.printf("%-6s | %-10s | %-15s | %-15s | %-3s | %-20s | %-15s | %-15s%n",
-                "UserID", "UserType", "Username", "Password", "Age", "Email", "Phone Number", "Occupation");
+        System.out.printf("%-4s | %-10s | %-15s | %-15s | %-3s | %-20s | %-15s | %-15s%n",
+                "ID", "User Type", "Username", "Password", "Age", "Email", "Phone Number", "Occupation");
         System.out.println("-".repeat(130));
         for (User user : users) {
-            System.out.printf("%-6d | %-10s | %-15s | %-15s | %-3d | %-20s | %-15s | %-15s%n",
+            System.out.printf("%-4d | %-10s | %-15s | %-15s | %-3d | %-20s | %-15s | %-15s%n",
                     user.getUserID(), user.getUserType(), user.getUsername(), user.getPassword(), user.getAge(),
                     user.getEmail(), user.getPhoneNo(), user.getOccupation());
         }
@@ -60,17 +64,16 @@ public class userHandler {
 
     private static int generateNewUserID(List<User> users) {
          // Find the maximum userID from existing users and increment by 1
-         int maxUserID = 0;
+         int maxID = 0;
          for (User user : users) {
-             if (user.getUserID() > maxUserID) {
-                 maxUserID = user.getUserID();
+             if (user.getUserID() > maxID) {
+            	 maxID = user.getUserID();
              }
          }
-         return maxUserID + 1;
+         return maxID + 1;
      }
     
     public void addUser(int mode) {
-    	
         Scanner scanner = new Scanner(System.in);
 
         List<User> users = readUsers();
@@ -84,7 +87,9 @@ public class userHandler {
         int userID = generateNewUserID(users);
         userType userType = enuum.userType.CUSTOMER;  // Only 1 admin
         
-        System.out.print("Username: ");
+        System.out.printf("\nUser ID #%d", userID);
+        
+        System.out.print("\nUsername: ");
         String username = scanner.nextLine();
         System.out.print("Password: ");
         String password = scanner.nextLine();
@@ -111,9 +116,9 @@ public class userHandler {
 
     public void modifyUser(int mode) {
         Scanner scanner = new Scanner(System.in);
+        String userInputToModify = null;
         User userToModify = null;
         User updatedUser = null;
-        String userInputToModify = null;
         
         // Display existing users for reference
         List<User> users = readUsers();
@@ -131,7 +136,6 @@ public class userHandler {
         }
 
         // Find the user with the specified username or user ID
-        userToModify = null;
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             if (String.valueOf(user.getUserID()).equals(userInputToModify) || user.getUsername().equals(userInputToModify)) {

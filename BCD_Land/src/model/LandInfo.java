@@ -3,6 +3,8 @@ package model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import enuum.status;
+
 @SuppressWarnings("serial")
 public class LandInfo implements Serializable {
 	private int landID;
@@ -14,12 +16,13 @@ public class LandInfo implements Serializable {
 	private Timestamp regDate;
 	private int landCond; 	//0 to 5
 	private double value;
+	private status regStatus;
 	
 	public LandInfo() {
 		
 	}
 
-	public LandInfo(int landID, double landArea, double landHeight, double landVolume, int yearOfCon, int owner, Timestamp regDate, int landCond, double value) {
+	public LandInfo(int landID, double landArea, double landHeight, double landVolume, int yearOfCon, int owner, Timestamp regDate, int landCond, double value, status regStatus) {
 		super();
 		this.landID = landID;
 		this.landArea = landArea;
@@ -30,6 +33,7 @@ public class LandInfo implements Serializable {
 		this.regDate = regDate;
 		this.landCond = landCond;
 		this.value = value;
+		this.regStatus = regStatus;
 	}
 
 	public int getLandID() {
@@ -104,6 +108,14 @@ public class LandInfo implements Serializable {
 		this.value = value;
 	}
 
+	public status getRegStatus() {
+		return regStatus;
+	}
+
+	public void setRegStatus(status regStatus) {
+		this.regStatus = regStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "LandInfo [landID=" + landID + 
@@ -114,7 +126,8 @@ public class LandInfo implements Serializable {
 				", owner=" + owner + 
 				", regDate=" + regDate + 
 				", landCond=" + landCond + 
-				", value=" + value + "]";
+				", value=" + value +
+				", regStatus=" + regStatus + "]";
 	}
 
 }

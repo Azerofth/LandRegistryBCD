@@ -16,14 +16,14 @@ public class TransRec implements Serializable{
 	private double amount;
 	private paymentMethod paymentMethod;
 	private transType transType;
-	private tranStatus tranStatus;
+	private status tranStatus;
 	
 	public TransRec() {
 		
 	}
 
 	public TransRec(int transID, int landID, int buyerID, int sellerID, Timestamp recDate, double amount,
-			enuum.paymentMethod paymentMethod, enuum.transType transType, enuum.tranStatus tranStatus) {
+			enuum.paymentMethod paymentMethod, enuum.transType transType, enuum.status tranStatus) {
 		super();
 		this.transID = transID;
 		this.landID = landID;
@@ -100,11 +100,11 @@ public class TransRec implements Serializable{
 		this.transType = transType;
 	}
 
-	public tranStatus getTranStatus() {
+	public status getTranStatus() {
 		return tranStatus;
 	}
 
-	public void setTranStatus(tranStatus tranStatus) {
+	public void setTranStatus(status tranStatus) {
 		this.tranStatus = tranStatus;
 	}
 

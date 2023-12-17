@@ -1,19 +1,13 @@
 package landregistry;
 
+//includes main menu, login, register, logout
+
 import java.util.List;
-
-// includes 
-//		- main menu
-//		- login
-//		- register
-//		- logout
-
-
 import java.util.Scanner;
 
 import enuum.userType;
 import handler.FileHandler;
-import handler.userHandler;
+import handler.UserHandler;
 import z.admin.*;
 import z.customer.*;
 import model.User;
@@ -24,7 +18,7 @@ public class Main {
 	private static User currentUser = null;
 	
     public static void main(String[] args) {
-        
+
         while (isRunning) {
             welcomeMenu();
         }
@@ -63,7 +57,7 @@ public class Main {
     }
     
     public static void login() {
-    	userHandler uh = new userHandler();
+    	UserHandler uh = new UserHandler();
     	customer cus = new customer();
     	admin ad = new admin();
     	
@@ -85,12 +79,11 @@ public class Main {
         
         if (user != null) {
             System.out.println("Login successful!\n\n");
-            currentUser = user;
             // Redirect to the appropriate menu based on userType
             if (user.getUserType() == userType.ADMIN) {
-                ad.adminMenu(currentUser);
+                ad.adminMenu();
             } else {
-                cus.customerMenu(currentUser);
+                cus.customerMenu();
             }
         } else {
             System.out.println("Invalid username or password. Login failed.\n\n");
@@ -116,7 +109,7 @@ public class Main {
     	System.out.println("\n\nRegister User");
     	System.out.println("-".repeat(50));
     	
-    	userHandler userHandler = new userHandler();
+    	UserHandler userHandler = new UserHandler();
 
     	userHandler.addUser(1);
 
