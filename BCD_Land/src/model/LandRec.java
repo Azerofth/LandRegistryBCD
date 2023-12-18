@@ -3,27 +3,27 @@ package model;
 import java.io.Serializable;
 
 import enuum.landStatus;
+import enuum.status;
 
 @SuppressWarnings("serial")
 public class LandRec implements Serializable{
     private int recID;
     private int landID;
-    private int pastOwner;
-    private int buyer;
+    private int ownerID;
     private String prevUse;
     private int transID;
     private landStatus landStatus;
+    private status regStatus;
     
 	public LandRec() {
 		
 	}
 
-	public LandRec(int recID, int landID, int pastOwner, int buyer, String prevUse, int transID, enuum.landStatus landStatus) {
+	public LandRec(int recID, int landID, int ownerID, String prevUse, int transID, enuum.landStatus landStatus) {
 		super();
 		this.recID = recID;
 		this.landID = landID;
-		this.pastOwner = pastOwner;
-		this.buyer = buyer;
+		this.ownerID = ownerID;
 		this.prevUse = prevUse;
 		this.transID = transID;
 		this.landStatus = landStatus;
@@ -45,20 +45,12 @@ public class LandRec implements Serializable{
 		this.landID = landID;
 	}
 
-	public int getPastOwner() {
-		return pastOwner;
+	public int ownerID() {
+		return ownerID;
 	}
 
-	public void setPastOwner(int pastOwner) {
-		this.pastOwner = pastOwner;
-	}
-
-	public int getBuyer() {
-		return buyer;
-	}
-
-	public void setBuyer(int buyer) {
-		this.buyer = buyer;
+	public void setownerID(int ownerID) {
+		this.ownerID = ownerID;
 	}
 
 	public String getPrevUse() {
@@ -77,23 +69,31 @@ public class LandRec implements Serializable{
 		this.transID = transID;
 	}
 
-	public landStatus getStatus() {
+	public landStatus getLandStatus() {
 		return landStatus;
 	}
 
-	public void setStatus(enuum.landStatus landStatus) {
+	public void setLandStatus(enuum.landStatus landStatus) {
 		this.landStatus = landStatus;
+	}
+	
+	public status getRegStatus() {
+		return regStatus;
+	}
+
+	public void setRegStatus(enuum.status regStatus) {
+		this.regStatus = regStatus;
 	}
 
 	@Override
 	public String toString() {
 		return "LandRec [recID=" + recID + 
 				", landID=" + landID + 
-				", pastOwner=" + pastOwner + 
-				", buyer=" + buyer + 
+				", ownerID=" + ownerID + 
 				", prevUse=" + prevUse + 
 				", transID=" + transID + 
-				", status=" + landStatus + "]";
+				", landStatus=" + landStatus +
+				", regStatus=" + regStatus + "]";
 	}    
     
 }

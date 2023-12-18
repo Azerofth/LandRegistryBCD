@@ -20,9 +20,7 @@ public class manageLand {
 		        System.out.println("1. Land List");	// display all and incl count for registered n pending
 		        System.out.println("2. Register New Land");
 		        System.out.println("3. Approve Land Registration");
-		        System.out.println("4. Modify Registered Land");
-		        System.out.println("5. Remove Registered Land"); // set status to removed, so it doesnt effect landrec
-		        System.out.println("6. Back");
+		        System.out.println("4. Back");
 		        System.out.print("Enter your choice: ");
 
 		        try {
@@ -44,17 +42,17 @@ public class manageLand {
 		                    System.out.println("-".repeat(50));
 		                    lih.approveLandInfo();
 		                    break;
+//		                case 4:
+//		                    System.out.println("Modify Registered Land");
+//		                    System.out.println("-".repeat(50));
+//		                    lih.modifyLandInfo(000);
+//		                    break;
+//		                case 5:
+//		                    System.out.println("Delete Registered Land");
+//		                    System.out.println("-".repeat(50));
+//		                    lih.deleteLandInfo();
+//		                    break;
 		                case 4:
-		                    System.out.println("Modify Registered Land");
-		                    System.out.println("-".repeat(50));
-		                    lih.modifyLandInfo(000);
-		                    break;
-		                case 5:
-		                    System.out.println("Delete Registered Land");
-		                    System.out.println("-".repeat(50));
-		                    lih.deleteLandInfo();
-		                    break;
-		                case 6:
 		                	mlIsRunning = false;
 		                    break; // back
 		                default:

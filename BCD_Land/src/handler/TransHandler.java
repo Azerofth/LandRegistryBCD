@@ -50,12 +50,12 @@ public class TransHandler {
 	    if (transactions.isEmpty()) {
 	        System.out.println("No pending transactions.");
 	    } else {
-	        System.out.printf("%-4s | %-7s | %-6s | %-6s | %-10s | %-12s | %-20s | %-15s | %-10s%n",
+	        System.out.printf("%-4s | %-7s | %-6s | %-6s | %-10s | %-12s | %-20s | %-25s | %-10s%n",
 	                "ID", "Land ID", "Buyer", "Seller", "Amount", "Pay Method", "Type", "Recorded Date", " Status");
 	        System.out.println("-".repeat(130));
 
 	        for (TransRec transaction : transactions) {
-	            System.out.printf("%-4s | %-7s | %-6s | %-6s | %-10s | %-12s | %-20s | %-15s | %-10s%n",
+	            System.out.printf("%-4s | %-7s | %-6s | %-6s | %-10s | %-12s | %-20s | %-25s | %-10s%n",
 	                    transaction.getTransID(), transaction.getLandID(), transaction.getBuyerID(), transaction.getSellerID(),
 	                    transaction.getAmount(), transaction.getPaymentMethod(), transaction.getTransType(),
 	                    transaction.getRecDate(), transaction.getTranStatus());
@@ -142,7 +142,7 @@ public class TransHandler {
         } else if (paymentMet == 4) {
             paymentMethod = enuum.paymentMethod.QRPAY;
         } else if (paymentMet == 5) {
-            System.out.println("Transaction canceled.");
+            System.out.println("** Transaction canceled. **");
             return false;
         }
 
@@ -152,7 +152,7 @@ public class TransHandler {
                 enteredPassword = scanner.nextLine();  // Use nextLine() to consume the entire line
 
                 if (enteredPassword.equalsIgnoreCase("X")) {
-                    System.out.println("\nTransaction canceled.");
+                    System.out.println("\n** Transaction canceled. **");
                     return false;
                 }
 
@@ -197,43 +197,53 @@ public class TransHandler {
         // Create a new transaction object
         TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus);
 
-        System.out.println(newTransaction);
         // Add the new transaction to the list
         FileHandler.addObject(newTransaction, TRANSACTION_FILE);
-        System.out.println("Transaction recorded successfully.");
+
     }
 
     
     // update status to COMPLETE
 	// user can choose to approve all transactions by input specific transRecID to approve
+	
 	public void approveTransaction() {
 	    Scanner scanner = new Scanner(System.in);
 
+	    List<TransRec> allTransactions = readTransRec();
+	    
 	    // Display a list of transactions pending approval
-	    List<TransRec> pendingTransactions = printTransactionInfo(1);
+	    List<TransRec> pendingTransactions = allTransactions.stream()
+	            .filter(transaction -> transaction.getTranStatus() == enuum.status.PENDING)
+	            .collect(Collectors.toList());
 
-	    // Ask the user to input the transaction ID to approve
-	    System.out.print("Transaction ID to approve (0 to approve all): ");
-	    int transRecID = scanner.nextInt();
+	    if (pendingTransactions != null) {
+		    // Ask the user to input the transaction ID to approve
+		    System.out.print("Transaction ID to approve (0 to approve all): ");
+		    int transRecID = scanner.nextInt();
 
-	    if (transRecID == 0) {
-	        // Approve all transactions
-	        for (TransRec transaction : pendingTransactions) {
-	            transaction.setTranStatus(enuum.status.COMPLETE);
-	        }
-	        System.out.println("All transactions approved.");
-	    } else {
-	        // Approve a specific transaction by updating its status
-	        TransRec transactionToApprove = displayCurrentTransactionInfo(transRecID);
-	        if (transactionToApprove != null) {
-	            transactionToApprove.setTranStatus(enuum.status.COMPLETE);
-	            System.out.println("Transaction ID #" + transRecID + " approved.");
-	        } else {
-	            System.out.println("Transaction not found or already approved.");
-	        }
+		    if (transRecID == 0) {
+		        // Approve all transactions
+		        for (TransRec transaction : pendingTransactions) {
+		            transaction.setTranStatus(enuum.status.COMPLETE);
+		        }
+		        System.out.println("** All transactions approved. **");
+		    } else {
+		        // Approve a specific transaction by updating its status
+		        TransRec transactionToApprove = pendingTransactions.stream()
+		                .filter(transaction -> transaction.getTransID() == transRecID)
+		                .findFirst()
+		                .orElse(null);
+
+		        if (transactionToApprove != null) {
+		            transactionToApprove.setTranStatus(enuum.status.COMPLETE);
+		            System.out.println("** Transaction ID #" + transRecID + " approved. **");
+		        } else {
+		            System.out.println("** Transaction not found or already approved. **");
+		        }
+		    }
+
+		    // Update the transaction file with the modified transactions
+		    FileHandler.writeData(allTransactions, TRANSACTION_FILE);
 	    }
-
-	    // Update the transaction file with the modified transactions
-	    FileHandler.writeData(pendingTransactions, TRANSACTION_FILE);
 	}
 }
