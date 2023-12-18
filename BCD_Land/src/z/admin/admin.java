@@ -17,15 +17,12 @@ public class admin {
     UserHandler uh = new UserHandler();
     manageUser mu = new manageUser();
     manageLand ml = new manageLand();
-    Main main = new Main();
     
     public void adminMenu() {
-    	
     	User currentUser = login.getCurrentUser();
-    	System.out.println(currentUser);
+    	System.out.println("Welcome, " + currentUser.getUsername() + "!");
+    	
         while (isRunning) {
-            System.out.println("Welcome, " + currentUser.getUsername());
-
             System.out.println("\nAdmin Menu");
             System.out.println("-".repeat(50));
             System.out.println("1. Manage User");
@@ -55,7 +52,7 @@ public class admin {
                         // check transaction success? LANDINFO update
                         break;
                     case 4:
-                        isRunning = main.logout();
+                        isRunning = login.logout();
                         break;
                     default:
                         System.out.println("Invalid choice. Please enter a valid option.");

@@ -53,7 +53,7 @@ public class UserHandler {
         int userID = generateNewUserID(users);
         userType userType = enuum.userType.CUSTOMER;  // Only 1 admin
         
-        System.out.printf("\nUser ID #%d", userID);
+        System.out.printf("User ID #%d", userID);
         
         System.out.print("\nUsername: ");
         String username = scanner.nextLine();
@@ -77,7 +77,7 @@ public class UserHandler {
 
         // Add the new user to the list
         FileHandler.addObject(newUser, USER_FILE);
-        System.out.println("New user registered successfully.");
+        System.out.println("** New user registered successfully. **\n");
     }
 
     public void modifyUser(int mode) {
@@ -115,18 +115,18 @@ public class UserHandler {
         
         if (userToModify != null) {
             // Collect updated user details from user input
-            System.out.print("\nNew username\t\t: ");
+            System.out.println("New username\t\t: ");
             String newUsername = scanner.nextLine();
-            System.out.print("New password\t\t: ");
+            System.out.println("New password\t\t: ");
             String newPassword = scanner.nextLine();
-            System.out.print("New age\t\t\t: ");
+            System.out.println("New age\t\t\t: ");
             int newAge = scanner.nextInt();
             scanner.nextLine();
-            System.out.print("New email\t\t: ");
+            System.out.println("New email\t\t: ");
             String newEmail = scanner.nextLine();
-            System.out.print("New phone number\t: ");
+            System.out.println("New phone number\t: ");
             String newPhoneNumber = scanner.nextLine();
-            System.out.print("New occupation\t\t: ");
+            System.out.println("New occupation\t\t: ");
             String newOccupation = scanner.nextLine();
 
             // Create a new user object with updated details
@@ -146,11 +146,11 @@ public class UserHandler {
             // Write the updated user list to the file
             FileHandler.writeData(users, USER_FILE);
 
-            System.out.println("User modified successfully.");
+            System.out.println("** User modified successfully. **\n");
             System.out.println(updatedUser);
             printUser(); // Display updated user list
         } else {
-            System.out.println("User not found.");
+            System.out.println("** User not found. **\n");
         }
 
         if (mode == 1) {
@@ -169,7 +169,7 @@ public class UserHandler {
         printUser();
 
         // Collect user input for the user to delete
-        System.out.print("Enter the username or user ID to delete: ");
+        System.out.print("\nEnter the username or user ID to delete: ");
         String userInputToDelete = scanner.nextLine();
 
         // Find the user with the specified username
@@ -185,10 +185,10 @@ public class UserHandler {
             // Delete the user
             users.remove(userToDelete);
             FileHandler.writeData(users, USER_FILE);
-            System.out.println("User deleted successfully.");
+            System.out.println("** User deleted successfully. **\n");
             printUser();
         } else {
-            System.out.println("User not found.");
+            System.out.println("** User not found. **\n");
         }
     }
 }

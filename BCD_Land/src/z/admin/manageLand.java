@@ -35,7 +35,7 @@ public class manageLand {
 		                    lih.printLandInfo(000);
 		                    break;
 		                case 2:
-		                    System.out.println("Register New Land");
+		                    System.out.println("Register Land");
 		                    System.out.println("-".repeat(50));
 		                    lih.addLandInfo(000);
 		                    break;

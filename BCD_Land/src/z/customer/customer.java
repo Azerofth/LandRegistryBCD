@@ -17,14 +17,14 @@ public class customer {
 	LoginHandler login = LoginHandler.getInstance();
 	UserHandler uh = new UserHandler();
 	LandInfoHandler lih = new LandInfoHandler();
-	Main main = new Main();
 	
 	public void customerMenu() 
 	{
     	User currentUser = login.getCurrentUser();
+    	System.out.println("Welcome, " + currentUser.getUsername() + "!");
+    	
 		while (isRunning) {		
 			try {
-				System.out.println("Welcome, " + currentUser.getUsername());
 				
 				System.out.println("\nMenu");
 				System.out.println("-".repeat(50));
@@ -42,9 +42,13 @@ public class customer {
 
 				switch (choice) {
 				    case 1:
+				    	System.out.println("\nModify Profile");
+				    	System.out.println("-".repeat(50));
 				    	uh.modifyUser(1);
 				        break;
 				    case 2:
+				    	System.out.println("\nRegister Land");
+				    	System.out.println("-".repeat(50));
 				    	lih.addLandInfo(1);
 				    			// input landInfo
 				        break;
@@ -58,7 +62,7 @@ public class customer {
 				    			// read land ONSALE
 				        break;
 				    case 5:
-				        isRunning = main.logout();
+				        isRunning = login.logout();
 				        break;
 				    default:
 				        System.out.println("Invalid choice. Please enter a valid option.");

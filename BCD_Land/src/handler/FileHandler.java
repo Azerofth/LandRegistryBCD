@@ -43,37 +43,4 @@ public class FileHandler {
         dataList.add(newItem);
         writeData(dataList, fileName);
     }
-
-//    public static <T> void deleteObject(T itemToDelete, String fileName) {
-//        List<T> dataList = readData(fileName);
-//        dataList.remove(itemToDelete);
-//        System.out.println(itemToDelete);
-//        System.out.println(dataList);
-//        writeData(dataList, fileName);
-//    }
-
-//    public static <T> void updateObject(T oldItem, T newItem, String fileName) {
-//        List<T> dataList = readData(fileName);
-//        if (dataList.remove(oldItem)) {
-//            dataList.add(newItem);
-//            writeData(dataList, fileName);
-//        }
-//    }
-//    
-//    public static <T> void updateObject(T oldItem, T newItem, String fileName) {
-//        List<T> dataList = readData(fileName);
-//
-//        // Find the index of the old item in the list
-//        int index = dataList.indexOf(oldItem);
-//
-//        if (index != -1) {
-//            // Replace the old item with the new item at the same index
-//            dataList.set(index, newItem);
-//            writeData(dataList, fileName);
-//            System.out.println("Object updated successfully.");
-//        } else {
-//            System.out.println("Object not found.");
-//        }
-//    }
-
 }
