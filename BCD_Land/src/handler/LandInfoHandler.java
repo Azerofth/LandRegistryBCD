@@ -149,7 +149,7 @@ public class LandInfoHandler {
         // Create a new user object
         LandInfo newLandInfo = new LandInfo(landID, landArea, landHeight, landVolume, yearOfCon, owner, regDate, landCond, value, regStatus);
 
-        boolean transaction = th.transaction(1, landID, owner, 0);
+        boolean transaction = th.newTransaction(1, landID, owner, 0);
         
         if (transaction == true) {
             // Add the new user to the list

@@ -3,13 +3,12 @@ package handler;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import enuum.paymentMethod;
 import enuum.status;
 import enuum.transType;
-import model.LandInfo;
 import model.TransRec;
-import model.User;
 
 public class TransHandler {
     static LoginHandler login = LoginHandler.getInstance();
@@ -33,7 +32,77 @@ public class TransHandler {
         return maxID + 1;
     }
 
-    public boolean transaction(int mode, int landID, int buyerID, int sellerID) {
+    public List<TransRec> printTransactionInfo(int mode) {
+        List<TransRec> transactions = readTransRec();
+
+        if (mode == 1) {		//read pending only
+    	    List<TransRec> filteredTransactions = transactions.stream()
+    		        .filter(transaction -> transaction.getTranStatus() == enuum.status.PENDING)
+    		        .collect(Collectors.toList());
+    		transactions = filteredTransactions;
+    		System.out.printf("\n\n%" + 50 + "s%s%n", "", "Pending Transaction");
+    		System.out.println("-".repeat(130));
+        }else {
+            System.out.printf("\n\n%" + 50 + "s%s%n", "", "Transaction Information");
+            System.out.println("-".repeat(130));
+        }
+        
+	    if (transactions.isEmpty()) {
+	        System.out.println("No pending transactions.");
+	    } else {
+	        System.out.printf("%-4s | %-7s | %-6s | %-6s | %-10s | %-12s | %-20s | %-15s | %-10s%n",
+	                "ID", "Land ID", "Buyer", "Seller", "Amount", "Pay Method", "Type", "Recorded Date", " Status");
+	        System.out.println("-".repeat(130));
+
+	        for (TransRec transaction : transactions) {
+	            System.out.printf("%-4s | %-7s | %-6s | %-6s | %-10s | %-12s | %-20s | %-15s | %-10s%n",
+	                    transaction.getTransID(), transaction.getLandID(), transaction.getBuyerID(), transaction.getSellerID(),
+	                    transaction.getAmount(), transaction.getPaymentMethod(), transaction.getTransType(),
+	                    transaction.getRecDate(), transaction.getTranStatus());
+	        }
+	    }
+
+        System.out.println("-".repeat(130));
+        
+        return transactions;
+    }
+
+    public TransRec displayCurrentTransactionInfo(int transID) {
+        List<TransRec> transactions = readTransRec();
+
+        List<TransRec> filteredTransactions = transactions.stream()
+                .filter(transaction -> transaction.getTransID() == transID)
+                .collect(Collectors.toList());
+
+        if (filteredTransactions.size() == 1) {
+            TransRec transaction = filteredTransactions.get(0);
+
+            System.out.println("\n");
+            System.out.println("*".repeat(50));
+            System.out.println("Updated Transaction Information:");
+            System.out.printf("Transaction ID #" + transaction.getTransID() +
+                    "\nLand ID\t\t:" + transaction.getLandID() +
+                    "\nBuyer ID\t\t:" + transaction.getBuyerID() +
+                    "\nSeller ID\t\t:" + transaction.getSellerID() +
+                    "\nAmount\t\t\t:" + transaction.getAmount() +
+                    "\nPayment Method\t\t:" + transaction.getPaymentMethod() +
+                    "\nTransaction Type\t:" + transaction.getTransType() +
+                    "\nTransaction Status\t:" + transaction.getTranStatus() +
+                    "\nRecorded Date\t\t:" + transaction.getRecDate() + "\n");
+            System.out.println("*".repeat(50));
+            System.out.println("\n");
+            return transaction;
+        } else if (filteredTransactions.isEmpty()) {
+            System.out.println("** Transaction ID not found. **\n");
+        } else {
+            System.out.println("** Multiple entries found for the same Transaction ID. **\n");
+        }
+		return null;
+    }
+
+
+	
+    public boolean newTransaction(int mode, int landID, int buyerID, int sellerID) {
         Scanner scanner = new Scanner(System.in);
         final int MAX_ATTEMPTS = 3;
         int attempts = 0;
@@ -133,4 +202,38 @@ public class TransHandler {
         FileHandler.addObject(newTransaction, TRANSACTION_FILE);
         System.out.println("Transaction recorded successfully.");
     }
+
+    
+    // update status to COMPLETE
+	// user can choose to approve all transactions by input specific transRecID to approve
+	public void approveTransaction() {
+	    Scanner scanner = new Scanner(System.in);
+
+	    // Display a list of transactions pending approval
+	    List<TransRec> pendingTransactions = printTransactionInfo(1);
+
+	    // Ask the user to input the transaction ID to approve
+	    System.out.print("Transaction ID to approve (0 to approve all): ");
+	    int transRecID = scanner.nextInt();
+
+	    if (transRecID == 0) {
+	        // Approve all transactions
+	        for (TransRec transaction : pendingTransactions) {
+	            transaction.setTranStatus(enuum.status.COMPLETE);
+	        }
+	        System.out.println("All transactions approved.");
+	    } else {
+	        // Approve a specific transaction by updating its status
+	        TransRec transactionToApprove = displayCurrentTransactionInfo(transRecID);
+	        if (transactionToApprove != null) {
+	            transactionToApprove.setTranStatus(enuum.status.COMPLETE);
+	            System.out.println("Transaction ID #" + transRecID + " approved.");
+	        } else {
+	            System.out.println("Transaction not found or already approved.");
+	        }
+	    }
+
+	    // Update the transaction file with the modified transactions
+	    FileHandler.writeData(pendingTransactions, TRANSACTION_FILE);
+	}
 }

@@ -17,6 +17,7 @@ public class admin {
     UserHandler uh = new UserHandler();
     manageUser mu = new manageUser();
     manageLand ml = new manageLand();
+    manageTransaction mt = new manageTransaction();
     
     public void adminMenu() {
     	User currentUser = login.getCurrentUser();
@@ -27,8 +28,9 @@ public class admin {
             System.out.println("-".repeat(50));
             System.out.println("1. Manage User");
             System.out.println("2. Manage Land");
-            System.out.println("3. Land Record");
-            System.out.println("4. Logout");
+            System.out.println("3. Manage Transaction");
+            System.out.println("4. Land Record");
+            System.out.println("5. Logout");
             System.out.print("Enter your choice: ");
 
             try {
@@ -44,14 +46,20 @@ public class admin {
                         ml.manageLandMenu();
                         // LANDINFO
                         // registerLand : new land
+                        // - need to approve transaction before landApproval
                         // landApproval : pass in all land status that is pending
                         break;
                     case 3:
+                    	mt.manageTransactionMenu();
+                        // 
+                        // check transaction success? LANDINFO update
+                        break;
+                    case 4:
                         // landRecord();
                         // LANDREC, TRANSREC
                         // check transaction success? LANDINFO update
                         break;
-                    case 4:
+                    case 5:
                         isRunning = login.logout();
                         break;
                     default:
