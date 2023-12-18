@@ -8,40 +8,6 @@ import enuum.userType;
 
 public class UserHandler {
     private static final String USER_FILE = "user.txt";
-
-    //Set current logged in user
-    public User currentUser = new User();   // Variable to store the currently logged-in user
-    
-    public void displayCurrentUser() {
-        if (currentUser != null) {
-        	System.out.println("\n\n");
-        	System.out.println("*".repeat(50));
-            System.out.println("Current User Information:");
-            System.out.printf("User ID\t:"+ currentUser.getUserID()+
-            		"\nUsername\t\t:"+ currentUser.getUsername()+ 
-            		"\nPassword\t\t:"+ currentUser.getPassword()+ 
-            		"\nAge\t\t\t:"+ currentUser.getAge()+
-            		"\nEmail\t\t\t:"+ currentUser.getEmail()+
-            		"\nPhone Number\t\t:"+ currentUser.getPhoneNo()+
-            		"\nOccupation\t\t:"+ currentUser.getOccupation() + "\n");
-            System.out.println("*".repeat(50));
-            System.out.println("\n\n");
-        } else {
-            System.out.println("No user is currently logged in.");
-        }
-    }
-
-    public void setCurrentUser(User user) {
-    	System.out.println("Setting currentUser to: " + user);
-        currentUser = user;
-    }
-    
-    public User getCurrentUser() {
-    	System.out.println(currentUser);
-        return currentUser;
-    }
-    
-    //--------------------------------------------------
     
     public static List<User> readUsers() {
         return FileHandler.readData(USER_FILE);
@@ -116,6 +82,8 @@ public class UserHandler {
 
     public void modifyUser(int mode) {
         Scanner scanner = new Scanner(System.in);
+        LoginHandler login = LoginHandler.getInstance();
+        
         String userInputToModify = null;
         User userToModify = null;
         User updatedUser = null;
@@ -124,8 +92,9 @@ public class UserHandler {
         List<User> users = readUsers();
 
         if (mode == 1) {
+        	User currentUser = login.getCurrentUser();
         	userInputToModify = currentUser.getUsername();
-            displayCurrentUser();
+            login.displayCurrentUser();
             //customer use
         } else {
             printUser(); //admin use
@@ -185,8 +154,8 @@ public class UserHandler {
         }
 
         if (mode == 1) {
-            currentUser = updatedUser;
-            displayCurrentUser();
+        	login.setCurrentUser(updatedUser);
+            login.displayCurrentUser();
             //customer use
         }
     }

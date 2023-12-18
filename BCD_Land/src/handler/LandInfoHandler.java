@@ -60,15 +60,17 @@ public class LandInfoHandler {
 	public void addLandInfo(int mode) {
 		
         Scanner scanner = new Scanner(System.in);
-
+        LoginHandler login = LoginHandler.getInstance();
+        
         List<LandInfo> landInfo = readLandInfo();
         printLandInfo(000);
         
     	if (mode == 1) {
-    		User currentUser = uh.getCurrentUser();
+    		
+    		User currentUser = login.getCurrentUser();
     		printLandInfo(currentUser.getUserID());
     		System.out.println(currentUser);	//pass currentUser that register land if mode = 1
-    		uh.displayCurrentUser();
+    		login.displayCurrentUser();
     		//customer use
     	} else {
     		printLandInfo(000);	//admin use
@@ -124,6 +126,8 @@ public class LandInfoHandler {
 	public void modifyLandInfo(int mode) {
 		
         Scanner scanner = new Scanner(System.in);
+        LoginHandler login = LoginHandler.getInstance();
+        
         int landInputToModify = 0;
         LandInfo landToModify = null;
         LandInfo updatedLandInfo = null;
@@ -133,9 +137,9 @@ public class LandInfoHandler {
         List<LandInfo> landInfos = readLandInfo();
 
 		if (mode == 1) {
-			printLandInfo(uh.currentUser.getUserID());
+			printLandInfo(login.getCurrentUserID());
             List<LandInfo> filteredLandInfos = landInfos.stream()
-                    .filter(landInfo -> landInfo.getOwner() == uh.currentUser.getUserID())
+                    .filter(landInfo -> landInfo.getOwner() == login.getCurrentUserID())
                     .collect(Collectors.toList());
             landInfos = filteredLandInfos;
 		}else {
@@ -178,7 +182,7 @@ public class LandInfoHandler {
 		           newOwner = scanner.nextInt();
 		           scanner.nextLine(); 
 	           } else {
-	        	   newOwner = uh.currentUser.getUserID();
+	        	   newOwner = login.getCurrentUserID();
 	           }
 	           
 	           System.out.print("New Land Condition (max 5)\t: ");

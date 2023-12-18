@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import enuum.userType;
 import handler.FileHandler;
+import handler.LoginHandler;
 import handler.UserHandler;
 import z.admin.*;
 import z.customer.*;
@@ -57,6 +58,7 @@ public class Main {
     }
     
     public static void login() {
+    	LoginHandler login = LoginHandler.getInstance();
     	UserHandler uh = new UserHandler();
     	customer cus = new customer();
     	admin ad = new admin();
@@ -75,7 +77,8 @@ public class Main {
         //scanner.close();
         // Check if the entered credentials are valid
         User user = validateUser(username, password);
-        uh.setCurrentUser(user);
+        
+        login.setCurrentUser(user);
         
         if (user != null) {
             System.out.println("Login successful!\n\n");

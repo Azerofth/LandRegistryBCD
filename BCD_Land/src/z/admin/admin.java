@@ -3,6 +3,7 @@ package z.admin;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import handler.LoginHandler;
 import handler.UserHandler;
 import landregistry.Main;
 import model.User;
@@ -12,13 +13,15 @@ public class admin {
     static boolean isRunning = true;
 
     Scanner scanner = new Scanner(System.in);
+    LoginHandler login = LoginHandler.getInstance();
     UserHandler uh = new UserHandler();
     manageUser mu = new manageUser();
     manageLand ml = new manageLand();
     Main main = new Main();
     
     public void adminMenu() {
-    	User currentUser = uh.getCurrentUser();
+    	
+    	User currentUser = login.getCurrentUser();
     	System.out.println(currentUser);
         while (isRunning) {
             System.out.println("Welcome, " + currentUser.getUsername());

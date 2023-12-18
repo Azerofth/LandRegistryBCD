@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 
 import handler.LandInfoHandler;
+import handler.LoginHandler;
 import handler.UserHandler;
 import landregistry.Main;
 import model.User;
@@ -13,13 +14,14 @@ public class customer {
 	
 	static boolean isRunning = true;
 	Scanner scanner = new Scanner(System.in);
+	LoginHandler login = LoginHandler.getInstance();
 	UserHandler uh = new UserHandler();
 	LandInfoHandler lih = new LandInfoHandler();
 	Main main = new Main();
 	
 	public void customerMenu() 
 	{
-    	User currentUser = uh.getCurrentUser();
+    	User currentUser = login.getCurrentUser();
 		while (isRunning) {		
 			try {
 				System.out.println("Welcome, " + currentUser.getUsername());
