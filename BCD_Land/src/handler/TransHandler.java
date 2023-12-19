@@ -16,6 +16,7 @@ public class TransHandler {
 	private static final String TRANSACTION_FILE = "transaction.txt";
 	
 	UserHandler uh = new UserHandler();
+	LandRecHandler lrh = new LandRecHandler();
 	
     private static List<TransRec> readTransRec() {
         return FileHandler.readData(TRANSACTION_FILE);
@@ -100,15 +101,17 @@ public class TransHandler {
 		return null;
     }
 
-
-	
     public boolean newTransaction(int mode, int landID, int buyerID, int sellerID) {
         Scanner scanner = new Scanner(System.in);
+        
+        List<TransRec> trans = readTransRec();
+
         final int MAX_ATTEMPTS = 3;
         int attempts = 0;
         String enteredPassword = null;
         
         paymentMethod paymentMethod = null;
+        double amount = 0;
 
         // 1 - REGISTRATIONOFTITLE     // reg land to gov
         // 2 - CONVEYANCE              // between buyer n seller
@@ -117,10 +120,13 @@ public class TransHandler {
         System.out.println("\n");
         if (mode == 1) {
             System.out.println("Registration of Title Fee: RM100");
+            amount = 100.0;
         } else if (mode == 2) {
-            System.out.println("Conveyance Fee: RM100");
+            System.out.println("Conveyance Fee: RM200");
+            amount = 200.0;
         } else if (mode == 3) {
             System.out.println("Registration of Deeds Fee: RM100");
+            amount = 100.0;
         }
 
         System.out.print("Select Payment Method\n");
@@ -158,7 +164,31 @@ public class TransHandler {
 
                 if (enteredPassword.equals(login.getCurrentUserPass())) {
                     System.out.println("** Transaction successful. **");
-                    addTransaction(mode, landID, buyerID, sellerID, paymentMethod);
+                    
+                    int transID = generateNewTransRecID(trans);
+                    Timestamp recDate = new Timestamp(System.currentTimeMillis());
+
+                    // Set transaction type based on the mode
+                    transType transType = null;
+                    if (mode == 1) {
+                        transType = enuum.transType.REGISTRATIONOFTITLE;
+                    } else if (mode == 2) {
+                        transType = enuum.transType.CONVEYANCE;
+                    } else if (mode == 3) {
+                        transType = enuum.transType.REGISTRATIONOFDEEDS;
+                    }
+
+                    // Set transaction status to PENDING as it needs approval
+                    status tranStatus = enuum.status.PENDING;
+
+                    // Create a new transaction object
+                    TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus);
+                    
+                    // Add the new transaction to the list
+                    FileHandler.addObject(newTransaction, TRANSACTION_FILE);
+                    
+                    lrh.newLandRec(1,landID,buyerID,transID);
+                    
                     return true;
                 } else {
                     attempts++;
@@ -173,36 +203,7 @@ public class TransHandler {
 
         return false;
     }
-    
-    private static void addTransaction(int mode, int landID, int buyerID, int sellerID, paymentMethod paymentMethod) {
-        List<TransRec> trans = readTransRec();
 
-        int transID = generateNewTransRecID(trans);
-        Timestamp recDate = new Timestamp(System.currentTimeMillis());
-        double amount = 100.0; // Assuming a fixed amount of RM100 for the transaction
-
-        // Set transaction type based on the mode
-        transType transType = null;
-        if (mode == 1) {
-            transType = enuum.transType.REGISTRATIONOFTITLE;
-        } else if (mode == 2) {
-            transType = enuum.transType.CONVEYANCE;
-        } else if (mode == 3) {
-            transType = enuum.transType.REGISTRATIONOFDEEDS;
-        }
-
-        // Set transaction status to PENDING as it needs approval
-        status tranStatus = enuum.status.PENDING;
-
-        // Create a new transaction object
-        TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus);
-
-        // Add the new transaction to the list
-        FileHandler.addObject(newTransaction, TRANSACTION_FILE);
-
-    }
-
-    
     // update status to COMPLETE
 	// user can choose to approve all transactions by input specific transRecID to approve
 	

@@ -318,16 +318,4 @@ public class LandInfoHandler {
 //	            System.out.println("Land not found.");
 //	        }
 //	}
-	
-	//display pending
-	public void approveLandInfo() {
-		
-	}
-	
-	//display completed/registered
-	//set status to removed
-	public void deleteLandInfo() {
-		
-		
-	}
 }

@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Scanner;
 
 import handler.LandInfoHandler;
+import handler.LandRecHandler;
 import model.LandInfo;
 
 public class manageLand {
 	Scanner scanner = new Scanner(System.in);
 	LandInfoHandler lih = new LandInfoHandler();
+	LandRecHandler lrh = new LandRecHandler();
 	
 	public void manageLandMenu(){
 	   	boolean mlIsRunning = true;
@@ -40,18 +42,8 @@ public class manageLand {
 		                case 3:
 		                    System.out.println("Approve Land Registration");
 		                    System.out.println("-".repeat(50));
-		                    lih.approveLandInfo();
+		                    lrh.approveLandRec();
 		                    break;
-//		                case 4:
-//		                    System.out.println("Modify Registered Land");
-//		                    System.out.println("-".repeat(50));
-//		                    lih.modifyLandInfo(000);
-//		                    break;
-//		                case 5:
-//		                    System.out.println("Delete Registered Land");
-//		                    System.out.println("-".repeat(50));
-//		                    lih.deleteLandInfo();
-//		                    break;
 		                case 4:
 		                	mlIsRunning = false;
 		                    break; // back

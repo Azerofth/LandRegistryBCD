@@ -1,6 +1,6 @@
 package enuum;
 
 public enum landStatus {
-	ONSALE,
-	SOLD
+	OWNED,		//not on sale
+	ONSALE
 }
