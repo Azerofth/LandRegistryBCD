@@ -25,17 +25,31 @@ public class LandRecHandler {
         // Find the maximum userID from existing users and increment by 1
         int maxID = 0;
         for (LandRec landRec : landRecs) {
-            if (landRec.getLandID() > maxID) {
-            	maxID = landRec.getLandID();
+            if (landRec.getRecID() > maxID) {
+            	maxID = landRec.getRecID();
             }
         }
         return maxID + 1;
     }
 
+    // Assuming you have a method to get a LandRec by landID in your LandRecHandler
+    private LandRec getLandRecByRecID(int recID) {
+    	List<LandRec> landRecs = readLandRec();
+    	
+        for (LandRec landRec : landRecs) {
+            if (landRec.getTransID() == recID) {
+                return landRec;
+            }
+        }
+        
+        return null;
+    }
+    
     public void printLandRec() {
     	TransHandler th = new TransHandler();
     	
         List<LandRec> landRecs = readLandRec();
+        
         List<TransRec> transRecs = th.readTransRec();
 
         // Create a map to store the latest LandRec for each recID
@@ -62,7 +76,7 @@ public class LandRecHandler {
 
             // Print LandRec and TranRec information
             System.out.printf("%-9s | %-9s | %-9s | %-9s | %-15s | %-15s | %-15s%n",
-                    landRec.getRecID(), landRec.getLandID(), landRec.ownerID(), landRec.getTransID(),
+                    landRec.getRecID(), landRec.getLandID(), landRec.getOwnerID(), landRec.getTransID(),
                     transRec.getTranStatus(), landRec.getLandStatus(), landRec.getRegStatus());
         }
 
@@ -70,56 +84,55 @@ public class LandRecHandler {
     }
 
 
-//    public TransRec displayCurrentTransactionInfo(int transID) {
-//        List<TransRec> transactions = readTransRec();
-//
-//        List<TransRec> filteredTransactions = transactions.stream()
-//                .filter(transaction -> transaction.getTransID() == transID)
-//                .collect(Collectors.toList());
-//
-//        if (filteredTransactions.size() == 1) {
-//            TransRec transaction = filteredTransactions.get(0);
-//
-//            System.out.println("\n");
-//            System.out.println("*".repeat(50));
-//            System.out.println("Updated Transaction Information:");
-//            System.out.printf("Transaction ID #" + transaction.getTransID() +
-//                    "\nLand ID\t\t:" + transaction.getLandID() +
-//                    "\nBuyer ID\t\t:" + transaction.getBuyerID() +
-//                    "\nSeller ID\t\t:" + transaction.getSellerID() +
-//                    "\nAmount\t\t\t:" + transaction.getAmount() +
-//                    "\nPayment Method\t\t:" + transaction.getPaymentMethod() +
-//                    "\nTransaction Type\t:" + transaction.getTransType() +
-//                    "\nTransaction Status\t:" + transaction.getTranStatus() +
-//                    "\nRecorded Date\t\t:" + transaction.getRecDate() + "\n");
-//            System.out.println("*".repeat(50));
-//            System.out.println("\n");
-//            return transaction;
-//        } else if (filteredTransactions.isEmpty()) {
-//            System.out.println("** Transaction ID not found. **\n");
-//        } else {
-//            System.out.println("** Multiple entries found for the same Transaction ID. **\n");
-//        }
-//		return null;
-//    }
+    public LandRec displayCurrentLandRecByID(int recID) {
+        LandRec landRec = getLandRecByRecID(recID);
+
+        if (landRec != null) {
+        	System.out.println("\n");
+            System.out.println("*".repeat(50));
+            System.out.println("                Land Record");
+            System.out.printf("Record ID  #" + landRec.getRecID() +
+                    "\nLand ID\t\t\t: " + landRec.getLandID() +
+                    "\nOwner ID\t\t: " + landRec.getOwnerID() +
+                    "\nTransaction ID\t\t: " + landRec.getTransID() +
+                    "\nLand Status\t\t: " + landRec.getLandStatus() +
+                    "\nRegistration Status\t: " + landRec.getRegStatus() + "\n");
+            System.out.println("*".repeat(50));
+            System.out.println("\n");
+            return landRec;
+        } else {
+            System.out.println("** Land ID not found or no land records available. **\n");
+        }
+        return null;
+    }
+    
 	
     public void newLandRec(int mode, int landID, int ownerID, int transID) {
         Scanner scanner = new Scanner(System.in);
-        
-        List<LandRec> landRecs = readLandRec();
+        LandRec newLandRec = null;
 
+        List<LandRec> landRecs = readLandRec();
         int recID = generateNewLandRecID(landRecs);
         
-        landStatus landStatus = enuum.landStatus.OWNED;
-        
-        status regStatus = enuum.status.PENDING;
-        
-        //create pending transaction n pending reg
-        LandRec newLandRec = new LandRec(recID, landID, ownerID, transID, landStatus, regStatus);
+        if (mode == 1) {		//when register land
+            landStatus landStatus = enuum.landStatus.OWNED;
+            status regStatus = enuum.status.PENDING;
+            newLandRec = new LandRec(recID, landID, ownerID, transID, landStatus, regStatus);
+        } else if (mode == 2) {		//when sell land
+            landStatus landStatus = enuum.landStatus.ONSALE;
+            status regStatus = enuum.status.COMPLETE;
+            newLandRec = new LandRec(recID, landID, ownerID, transID, landStatus, regStatus);
+        } else if (mode == 3) {		//when buy land
+            landStatus landStatus = enuum.landStatus.OWNED;
+            status regStatus = enuum.status.COMPLETE;
+            newLandRec = new LandRec(recID, landID, ownerID, transID, landStatus, regStatus);
+        }
         
         FileHandler.addObject(newLandRec, LANDREC_FILE);
         
         System.out.println("** Land Record Created. **");
+        
+        displayCurrentLandRecByID(recID);
     }
     
     // update status to COMPLETE
@@ -173,6 +186,7 @@ public class LandRecHandler {
 
             // Update the LandRec file with the modified records
             FileHandler.writeData(allLandRecs, LANDREC_FILE);
+            
         } else {
             System.out.println("** No pending land registrations found. Check any pending transaction. **");
         }

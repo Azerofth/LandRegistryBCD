@@ -20,8 +20,8 @@ public class LandInfoHandler {
     }
 	
     public void printLandInfo(int ownerID) {
-    	LandRecHandler lrh = new LandRecHandler();
-    	
+        LandRecHandler lrh = new LandRecHandler();
+
         List<LandInfo> landInfos = readLandInfo();
         List<LandRec> landRecs = lrh.readLandRec();
 
@@ -53,47 +53,50 @@ public class LandInfoHandler {
             LandRec latestLandRec = latestLandRecs.get(landID);
 
             if (latestLandRec != null) {
-                // Print land information along with the latest regStatus
+                // Get the latest owner information from LandRec
+                int latestOwnerID = latestLandRec.getOwnerID();
+                // Print land information along with the latest regStatus and owner
                 System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s | %-15s%n",
                         landInfo.getLandID(), landInfo.getLandArea(), landInfo.getLandHeight(), landInfo.getLandVolume(),
-                        landInfo.getYearOfCon(), landInfo.getOwner(), landInfo.getRegDate(), landInfo.getLandCond(),
+                        landInfo.getYearOfCon(), latestOwnerID, landInfo.getRegDate(), landInfo.getLandCond(),
                         landInfo.getValue(), latestLandRec.getRegStatus());
             }
         }
 
         System.out.println("-".repeat(130));
     }
+
     
-    public void displayCurrentLandInfo(int landID) {
-        List<LandInfo> landInfos = readLandInfo();
-
-        List<LandInfo> filteredLandInfos = landInfos.stream()
-                .filter(landInfo -> landInfo.getLandID() == landID)
-                .collect(Collectors.toList());
-
-        if (filteredLandInfos.size() == 1) {
-            LandInfo landInfo = filteredLandInfos.get(0);
-
-            System.out.println("\n");
-            System.out.println("*".repeat(50));
-            System.out.println("Updated Registered Land Information:");
-            System.out.printf("Land ID #" + landInfo.getLandID() +
-                    "\nArea\t\t:" + landInfo.getLandArea() +
-                    "\nHeight\t\t:" + landInfo.getLandHeight() +
-                    "\nVolume\t\t\t:" + landInfo.getLandVolume() +
-                    "\nYear\t\t\t:" + landInfo.getYearOfCon() +
-                    "\nOwner\t\t:" + landInfo.getOwner() +
-                    "\nRegistered Date\t\t:" + landInfo.getRegDate() +
-                    "\nCondition\t\t:" + landInfo.getLandCond() +
-                    "\nValue\t\t:" + landInfo.getValue() + "\n");
-            System.out.println("*".repeat(50));
-            System.out.println("\n");
-        } else if (filteredLandInfos.isEmpty()) {
-            System.out.println("** Land ID not found. **\n");
-        } else {
-            System.out.println("** Multiple entries found for the same Land ID. **\n");
-        }
-    }
+//    public void displayCurrentLandInfo(int landID) {
+//        List<LandInfo> landInfos = readLandInfo();
+//
+//        List<LandInfo> filteredLandInfos = landInfos.stream()
+//                .filter(landInfo -> landInfo.getLandID() == landID)
+//                .collect(Collectors.toList());
+//
+//        if (filteredLandInfos.size() == 1) {
+//            LandInfo landInfo = filteredLandInfos.get(0);
+//
+//            System.out.println("\n");
+//            System.out.println("*".repeat(50));
+//            System.out.println("Updated Registered Land Information:");
+//            System.out.printf("Land ID #" + landInfo.getLandID() +
+//                    "\nArea\t\t:" + landInfo.getLandArea() +
+//                    "\nHeight\t\t:" + landInfo.getLandHeight() +
+//                    "\nVolume\t\t\t:" + landInfo.getLandVolume() +
+//                    "\nYear\t\t\t:" + landInfo.getYearOfCon() +
+//                    "\nOwner\t\t:" + landInfo.getOwner() +
+//                    "\nRegistered Date\t\t:" + landInfo.getRegDate() +
+//                    "\nCondition\t\t:" + landInfo.getLandCond() +
+//                    "\nValue\t\t:" + landInfo.getValue() + "\n");
+//            System.out.println("*".repeat(50));
+//            System.out.println("\n");
+//        } else if (filteredLandInfos.isEmpty()) {
+//            System.out.println("** Land ID not found. **\n");
+//        } else {
+//            System.out.println("** Multiple entries found for the same Land ID. **\n");
+//        }
+//    }
     
     private static int generateNewLandInfoID(List<LandInfo> landInfos) {
         // Find the maximum userID from existing users and increment by 1
@@ -174,11 +177,7 @@ public class LandInfoHandler {
         boolean transaction = th.newTransaction(1, landID, owner, 0);
         
         if (transaction == true) {
-            // Add the new user to the list
             FileHandler.addObject(newLandInfo, LANDINFO_FILE);
-            
-            //create landRec
-            //status regStatus = enuum.status.PENDING;  // need approval
             
             System.out.println("** Successfully registered new land. Please patiently wait for approval. **");
         } else {

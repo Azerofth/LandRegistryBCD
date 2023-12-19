@@ -17,15 +17,15 @@ public class customer {
 	LoginHandler login = LoginHandler.getInstance();
 	UserHandler uh = new UserHandler();
 	LandInfoHandler lih = new LandInfoHandler();
+	landConveyance lc = new landConveyance();
 	
 	public void customerMenu() 
 	{
     	User currentUser = login.getCurrentUser();
     	System.out.println("Welcome, " + currentUser.getUsername() + "!");
-    	
+
 		while (isRunning) {		
 			try {
-				
 				System.out.println("\nMenu");
 				System.out.println("-".repeat(50));
 				System.out.println("1. Modify Profile");
@@ -37,8 +37,6 @@ public class customer {
 				
 				int choice = scanner.nextInt();
 				scanner.nextLine(); // Consume the newline character
-				
-				//scanner.close();
 
 				switch (choice) {
 				    case 1:
@@ -50,12 +48,12 @@ public class customer {
 				    	System.out.println("\nRegister Land");
 				    	System.out.println("-".repeat(50));
 				    	lih.addLandInfo(1);
-				    			// input landInfo
 				        break;
 				    case 3:
-				    	//userLandRecord();
-				    			// read all LANDINFO of current user
-				    			// user can reg as LANDREC to put onto market
+				    	System.out.println("\nUser Land Record");
+				    	System.out.println("-".repeat(50));
+				    	lc.userSellLand();
+
 				        break;
 				    case 4:
 				        //buyLand();

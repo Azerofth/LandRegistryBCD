@@ -44,11 +44,11 @@ public class LandRec implements Serializable{
 		this.landID = landID;
 	}
 
-	public int ownerID() {
+	public int getOwnerID() {
 		return ownerID;
 	}
 
-	public void setownerID(int ownerID) {
+	public void setOwnerID(int ownerID) {
 		this.ownerID = ownerID;
 	}
 
