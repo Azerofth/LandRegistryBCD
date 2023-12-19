@@ -3,6 +3,7 @@ package z.admin;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import handler.LandRecHandler;
 import handler.LoginHandler;
 import handler.UserHandler;
 import landregistry.Main;
@@ -18,6 +19,7 @@ public class admin {
     manageUser mu = new manageUser();
     manageLand ml = new manageLand();
     manageTransaction mt = new manageTransaction();
+    LandRecHandler lrh = new LandRecHandler();
     
     public void adminMenu() {
     	User currentUser = login.getCurrentUser();
@@ -55,6 +57,7 @@ public class admin {
                         // check transaction success? LANDINFO update
                         break;
                     case 4:
+                    	lrh.printLandRec();
                         // landRecord();
                         // LANDREC, TRANSREC
                         // check transaction success? LANDINFO update

@@ -4,6 +4,8 @@ package landregistry;
 
 import java.util.Scanner;
 
+import handler.LandInfoHandler;
+import handler.LandRecHandler;
 import handler.LoginHandler;
 
 public class Main {

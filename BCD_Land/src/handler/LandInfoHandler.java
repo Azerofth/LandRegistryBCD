@@ -1,12 +1,15 @@
 package handler;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import enuum.status;
 import model.LandInfo;
+import model.LandRec;
 import model.User;
 
 public class LandInfoHandler {
@@ -14,32 +17,52 @@ public class LandInfoHandler {
 	
 	UserHandler uh = new UserHandler();
 	TransHandler th = new TransHandler();
+	LandRecHandler lrh = new LandRecHandler();
 	
     public List<LandInfo> readLandInfo() {
         return FileHandler.readData(LANDINFO_FILE);
     }
 	
     public void printLandInfo(int ownerID) {
-    	List<LandInfo> landInfos = readLandInfo();
-    	
-    	if (ownerID != 000) {    		
+        List<LandInfo> landInfos = readLandInfo();
+        List<LandRec> landRecs = lrh.readLandRec();
+
+        if (ownerID != 000) {
             List<LandInfo> filteredLandInfos = landInfos.stream()
                     .filter(landInfo -> landInfo.getOwner() == ownerID)
                     .collect(Collectors.toList());
             landInfos = filteredLandInfos;
-    	} 
-    	
+        }
+
+        // Create a map to store the latest LandRec for each landID
+        Map<Integer, LandRec> latestLandRecs = new HashMap<>();
+
+        // Iterate through LandRecs to find the latest for each landID
+        for (LandRec landRec : landRecs) {
+            int landID = landRec.getLandID();
+            // Keep only the latest LandRec for each landID
+            latestLandRecs.put(landID, latestLandRecs.getOrDefault(landID, landRec));
+        }
+
         System.out.printf("\n\n%" + 50 + "s%s%n", "", "Registered Land");
         System.out.println("-".repeat(130));
         System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s | %-15s%n",
-        		"ID", "Area", "Height", "Volume", "Year", "Owner", "Registered Date", "Condition", "Value", "Status");
+                "ID", "Area", "Height", "Volume", "Year", "Owner", "Registered Date", "Condition", "Value", "Status");
         System.out.println("-".repeat(130));
+
         for (LandInfo landInfo : landInfos) {
-//            System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s | %-15s%n",
-            System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s%n",
-            		landInfo.getLandID(), landInfo.getLandArea(), landInfo.getLandHeight(), landInfo.getLandVolume(), landInfo.getYearOfCon(),
-            		landInfo.getOwner(), landInfo.getRegDate(), landInfo.getLandCond(), landInfo.getValue() /*get regStatus from landRec*/);
+            int landID = landInfo.getLandID();
+            LandRec latestLandRec = latestLandRecs.get(landID);
+
+            if (latestLandRec != null) {
+                // Print land information along with the latest regStatus
+                System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s | %-15s%n",
+                        landInfo.getLandID(), landInfo.getLandArea(), landInfo.getLandHeight(), landInfo.getLandVolume(),
+                        landInfo.getYearOfCon(), landInfo.getOwner(), landInfo.getRegDate(), landInfo.getLandCond(),
+                        landInfo.getValue(), latestLandRec.getRegStatus());
+            }
         }
+
         System.out.println("-".repeat(130));
     }
     

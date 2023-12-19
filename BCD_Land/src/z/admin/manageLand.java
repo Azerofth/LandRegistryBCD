@@ -35,12 +35,12 @@ public class manageLand {
 		                    lih.printLandInfo(000);
 		                    break;
 		                case 2:
-		                    System.out.println("Register Land");
+		                    System.out.println("\n\nRegister Land");
 		                    System.out.println("-".repeat(50));
 		                    lih.addLandInfo(000);
 		                    break;
 		                case 3:
-		                    System.out.println("Approve Land Registration");
+		                    System.out.println("\n\nApprove Land Registration");
 		                    System.out.println("-".repeat(50));
 		                    lrh.approveLandRec();
 		                    break;

@@ -16,9 +16,9 @@ public class TransHandler {
 	private static final String TRANSACTION_FILE = "transaction.txt";
 	
 	UserHandler uh = new UserHandler();
-	LandRecHandler lrh = new LandRecHandler();
 	
-    private static List<TransRec> readTransRec() {
+	
+    public List<TransRec> readTransRec() {
         return FileHandler.readData(TRANSACTION_FILE);
     }
     
@@ -103,6 +103,7 @@ public class TransHandler {
 
     public boolean newTransaction(int mode, int landID, int buyerID, int sellerID) {
         Scanner scanner = new Scanner(System.in);
+        LandRecHandler lrh = new LandRecHandler();
         
         List<TransRec> trans = readTransRec();
 
