@@ -17,10 +17,6 @@ public class LandRecHandler {
 
 	private static final String LANDREC_FILE = "landRec.txt";
 	
-	UserHandler uh = new UserHandler();
-	TransHandler th = new TransHandler();
-	
-	
 	public List<LandRec> readLandRec() {
         return FileHandler.readData(LANDREC_FILE);
     }
@@ -37,6 +33,8 @@ public class LandRecHandler {
     }
 
     public void printLandRec() {
+    	TransHandler th = new TransHandler();
+    	
         List<LandRec> landRecs = readLandRec();
         List<TransRec> transRecs = th.readTransRec();
 
@@ -129,6 +127,7 @@ public class LandRecHandler {
 	
 	public void approveLandRec() {
         Scanner scanner = new Scanner(System.in);
+    	TransHandler th = new TransHandler();
 
         // Read LandRecs
         List<LandRec> allLandRecs = readLandRec();

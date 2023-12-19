@@ -22,6 +22,9 @@ public class manageLand {
 		        System.out.println("1. Land List");	// display all and incl count for registered n pending
 		        System.out.println("2. Register New Land");
 		        System.out.println("3. Approve Land Registration");
+		        
+		        // System.out.println("3. Approve Land Transfer"); ???
+		        
 		        System.out.println("4. Back");
 		        System.out.print("Enter your choice: ");
 

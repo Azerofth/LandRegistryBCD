@@ -46,21 +46,12 @@ public class admin {
                         break;
                     case 2:
                         ml.manageLandMenu();
-                        // LANDINFO
-                        // registerLand : new land
-                        // - need to approve transaction before landApproval
-                        // landApproval : pass in all land status that is pending
                         break;
                     case 3:
                     	mt.manageTransactionMenu();
-                        // 
-                        // check transaction success? LANDINFO update
                         break;
                     case 4:
                     	lrh.printLandRec();
-                        // landRecord();
-                        // LANDREC, TRANSREC
-                        // check transaction success? LANDINFO update
                         break;
                     case 5:
                         isRunning = login.logout();

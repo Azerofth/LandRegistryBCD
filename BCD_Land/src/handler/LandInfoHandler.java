@@ -14,16 +14,14 @@ import model.User;
 
 public class LandInfoHandler {
 	private static final String LANDINFO_FILE = "landInfo.txt";
-	
-	UserHandler uh = new UserHandler();
-	TransHandler th = new TransHandler();
-	LandRecHandler lrh = new LandRecHandler();
-	
+
     public List<LandInfo> readLandInfo() {
         return FileHandler.readData(LANDINFO_FILE);
     }
 	
     public void printLandInfo(int ownerID) {
+    	LandRecHandler lrh = new LandRecHandler();
+    	
         List<LandInfo> landInfos = readLandInfo();
         List<LandRec> landRecs = lrh.readLandRec();
 
@@ -117,6 +115,8 @@ public class LandInfoHandler {
 		
         Scanner scanner = new Scanner(System.in);
         LoginHandler login = LoginHandler.getInstance();
+        TransHandler th = new TransHandler();
+        
         User currentUser = null;
         
         List<LandInfo> landInfo = readLandInfo();

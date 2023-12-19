@@ -14,10 +14,7 @@ public class TransHandler {
     static LoginHandler login = LoginHandler.getInstance();
 
 	private static final String TRANSACTION_FILE = "transaction.txt";
-	
-	UserHandler uh = new UserHandler();
-	
-	
+
     public List<TransRec> readTransRec() {
         return FileHandler.readData(TRANSACTION_FILE);
     }
