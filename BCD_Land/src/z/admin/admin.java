@@ -1,13 +1,16 @@
 package z.admin;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import handler.LandRecHandler;
 import handler.LoginHandler;
 import handler.UserHandler;
 import landregistry.Main;
+import model.LandRec;
 import model.User;
+import z.customer.landConveyance;
 
 public class admin {
 
@@ -20,6 +23,7 @@ public class admin {
     manageLand ml = new manageLand();
     manageTransaction mt = new manageTransaction();
     LandRecHandler lrh = new LandRecHandler();
+    landConveyance lc = new landConveyance();
     
     public void adminMenu() {
     	User currentUser = login.getCurrentUser();
@@ -52,6 +56,8 @@ public class admin {
                         break;
                     case 4:
                     	lrh.printLandRec();
+                		List<LandRec> allOnsale = lc.getLandRecList(3, 000);
+                		lc.printLandInfoWLandRec(3, allOnsale, 000);
                         break;
                     case 5:
                         isRunning = login.logout();

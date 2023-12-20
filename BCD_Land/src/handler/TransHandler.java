@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import enuum.paymentMethod;
 import enuum.status;
 import enuum.transType;
+import model.LandInfo;
 import model.TransRec;
 
 public class TransHandler {
@@ -104,6 +105,7 @@ public class TransHandler {
 
     public boolean newTransaction(int mode, int landID, int buyerID, int sellerID) {
         Scanner scanner = new Scanner(System.in);
+        LandInfoHandler lih = new LandInfoHandler();
         LandRecHandler lrh = new LandRecHandler();
         
         List<TransRec> trans = readTransRec();
@@ -115,6 +117,8 @@ public class TransHandler {
         
         paymentMethod paymentMethod = null;
         double amount = 0;
+        
+        LandInfo involvedLand = lih.getLandInfoByLandID(landID);
 
         // 1 - REGISTRATIONOFTITLE     	//register land
         // 2 - REGISTRATIONOFDEEDS     	//sell
@@ -131,8 +135,16 @@ public class TransHandler {
             amount = 100.0;
             transType = enuum.transType.REGISTRATIONOFDEEDS;
         } else if (mode == 3) {
-            System.out.println("Conveyance Fee: RM200");
-            amount = 200.0;
+            System.out.println("Conveyance Fee\t: RM200");
+            
+            double landValue = involvedLand.getValue();
+            System.out.println("Land Value\t: RM" + landValue);
+            
+            // Include the land value in the transaction amount
+            amount = 200.0 + landValue;
+            
+            System.out.println("** Total\t: RM" + amount + " **\n");
+            
             transType = enuum.transType.CONVEYANCE;	
         }
 

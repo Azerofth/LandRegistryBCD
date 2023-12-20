@@ -56,6 +56,9 @@ public class customer {
 
 				        break;
 				    case 4:
+				    	System.out.println("\nBuy Land");
+				    	System.out.println("-".repeat(50));
+				    	lc.userBuyLand();
 				        //buyLand();
 				    			// read land ONSALE
 				        break;
