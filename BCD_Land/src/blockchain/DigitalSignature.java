@@ -1,55 +1,63 @@
 package blockchain;
 
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
+
+import java.security.*;
 
 public class DigitalSignature {
-	private static final String ALGORITHM = "SHA256WithRSA";
-    private Signature sig;
+    private static final String ALGORITHM = "SHA256WithRSA";
+    private static DigitalSignature instance;
+    private Signature signature;
     private KeyPair keyPair;
- 
+    
     public DigitalSignature() {
+        // Generate key pair only once when the instance is created
+        keyPair = generateKeyPair();
+    }
+
+    // Singleton pattern: Get the instance of DigitalSignature
+    public static DigitalSignature getInstance() {
+        if (instance == null) {
+            instance = new DigitalSignature();
+        }
+        return instance;
+    }
+    
+    // Generate key pair for digital signature
+    private KeyPair generateKeyPair() {
         try {
-            sig = Signature.getInstance(ALGORITHM);
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            throw new RuntimeException("Error generating key pair.");
         }
     }
- 
-    public void setKeyPair(KeyPair keyPair) {
-        this.keyPair = keyPair;
+
+    // Generate digital signature for the transaction
+    public byte[] generateDigitalSignature(String data) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        signature = Signature.getInstance(ALGORITHM);
+        signature.initSign(keyPair.getPrivate());
+        signature.update(data.getBytes());
+        return signature.sign();
     }
- 
-    public byte[] getSignature(String text, PrivateKey key) {
-        try {
-            sig.initSign(key);
-            sig.update(text.getBytes());
-            return sig.sign();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+
+    // Verify digital signature during transaction approval
+    public boolean verifyDigitalSignature(String data, byte[] signatureBytes)
+            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        Signature signature = Signature.getInstance(ALGORITHM);
+        signature.initVerify(keyPair.getPublic());
+        signature.update(data.getBytes());
+        return signature.verify(signatureBytes);
     }
- 
-    public boolean isTextAndSignatureValid(String text, byte[] signature, PublicKey key) {
-        try {
-            sig.initVerify(key);
-            sig.update(text.getBytes());
-            return sig.verify(signature);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
- 
+
+    // Getter for public key
     public PublicKey getPublicKey() {
         return keyPair.getPublic();
     }
- 
-    public PrivateKey getPrivateKey() {
-        return keyPair.getPrivate();
+
+    // Setter for key pair (for deserialization)
+    public void setKeyPair(KeyPair keyPair) {
+        this.keyPair = keyPair;
     }
 }

@@ -1,5 +1,8 @@
 package handler;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +129,7 @@ public class LandInfoHandler {
 
 	// registerLand
     // mode to pass in, owner
-	public void addLandInfo(int mode) {
+	public void addLandInfo(int mode) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
 		
         Scanner scanner = new Scanner(System.in);
         LoginHandler login = LoginHandler.getInstance();

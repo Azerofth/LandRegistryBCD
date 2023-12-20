@@ -1,5 +1,8 @@
 package z.customer;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +139,7 @@ public class landConveyance {
 	    System.out.println("-".repeat(130));
 	}
 	
-	public void userSellLand() {
+	public void userSellLand() throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
 	    Scanner scanner = new Scanner(System.in);
 	    TransHandler th = new TransHandler();
 	    User currentUser = login.getCurrentUser();
@@ -184,7 +187,7 @@ public class landConveyance {
 
 
 
-	public void userBuyLand() {
+	public void userBuyLand() throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
 	    Scanner scanner = new Scanner(System.in);
 	    TransHandler th = new TransHandler();
 	    User currentUser = login.getCurrentUser();

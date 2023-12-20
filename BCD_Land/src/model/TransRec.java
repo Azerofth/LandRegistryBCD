@@ -18,7 +18,7 @@ public class TransRec implements Serializable{
 	private paymentMethod paymentMethod;
 	private transType transType;
 	private status tranStatus;
-	private byte[] adminSignature;
+	private byte[] myDigitalSignature;
 	
 	public TransRec() {
 		
@@ -26,7 +26,7 @@ public class TransRec implements Serializable{
 
 
 	public TransRec(int transID, int landID, int buyerID, int sellerID, Timestamp recDate, double amount,
-			enuum.paymentMethod paymentMethod, enuum.transType transType, status tranStatus, byte[] adminSignature) {
+			enuum.paymentMethod paymentMethod, enuum.transType transType, status tranStatus, byte[] myDigitalSignature) {
 		super();
 		this.transID = transID;
 		this.landID = landID;
@@ -37,7 +37,7 @@ public class TransRec implements Serializable{
 		this.paymentMethod = paymentMethod;
 		this.transType = transType;
 		this.tranStatus = tranStatus;
-		this.adminSignature = adminSignature;
+		this.myDigitalSignature = myDigitalSignature;
 	}
 
 	public int getTransID() {
@@ -130,13 +130,13 @@ public class TransRec implements Serializable{
 	}
 
 
-	public byte[] getAdminSignature() {
-		return adminSignature;
+	public byte[] getMyDigitalSignature() {
+		return myDigitalSignature;
 	}
 
 
-	public void setAdminSignature(byte[] adminSignature) {
-		this.adminSignature = adminSignature;
+	public void setMyDigitalSignature(byte[] myDigitalSignature) {
+		this.myDigitalSignature = myDigitalSignature;
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class TransRec implements Serializable{
 				", paymentMethod=" + paymentMethod + 
 				", transType=" + transType + 
 				", tranStatus=" + tranStatus + 
-				", adminSignature=" + Arrays.toString(adminSignature) + "]";
+				", myDigitalSignature=" + Arrays.toString(myDigitalSignature) + "]";
 	}
 	
 	
