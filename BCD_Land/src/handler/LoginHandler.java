@@ -66,11 +66,9 @@ public class LoginHandler {
     }
     
     public void login() {
-    	UserHandler uh = new UserHandler();
-    	customer cus = new customer();
-    	admin ad = new admin();
-    	
         Scanner scanner = new Scanner(System.in);
+        admin ad = new admin();
+        customer cus = new customer();
         
         System.out.println("\n\nLogin");
         System.out.println("-".repeat(50));
@@ -89,6 +87,7 @@ public class LoginHandler {
         
         if (user != null) {
             System.out.println("** Login successful! **\n");
+            
             // Redirect to the appropriate menu based on userType
             if (user.getUserType() == userType.ADMIN) {
                 ad.adminMenu();
@@ -126,7 +125,12 @@ public class LoginHandler {
     
     public boolean logout() {
 	        setCurrentUser(null);
-	        System.out.println("** Logout successful! **\n");
+	        if (currentUser == null) {
+	        	System.out.println("** Logout successful! **\n");
+	        } else {
+	        	System.out.println("** Logout failed **\n");
+	        }
+	        
         return false;
     }
 }

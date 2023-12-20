@@ -16,34 +16,34 @@ public class admin {
 
     static boolean isRunning = true;
 
-    Scanner scanner = new Scanner(System.in);
-    LoginHandler login = LoginHandler.getInstance();
-    UserHandler uh = new UserHandler();
-    manageUser mu = new manageUser();
-    manageLand ml = new manageLand();
-    manageTransaction mt = new manageTransaction();
-    LandRecHandler lrh = new LandRecHandler();
-    landConveyance lc = new landConveyance();
-    
-    public void adminMenu() {
+    public void adminMenu() 
+    {
+        Scanner scanner = new Scanner(System.in);
+        LoginHandler login = LoginHandler.getInstance();
+        UserHandler uh = new UserHandler();
+        manageUser mu = new manageUser();
+        manageLand ml = new manageLand();
+        manageTransaction mt = new manageTransaction();
+        LandRecHandler lrh = new LandRecHandler();
+        landConveyance lc = new landConveyance();
+        
     	User currentUser = login.getCurrentUser();
     	System.out.println("Welcome, " + currentUser.getUsername() + "!");
     	
         while (isRunning) {
-            System.out.println("\nAdmin Menu");
-            System.out.println("-".repeat(50));
-            System.out.println("1. Manage User");
-            System.out.println("2. Manage Land");
-            System.out.println("3. Manage Transaction");
-            System.out.println("4. Land Record");
-            System.out.println("5. Logout");
-            System.out.print("Enter your choice: ");
-
             try {
+                System.out.println("\nAdmin Menu");
+                System.out.println("-".repeat(50));
+                System.out.println("1. Manage User");
+                System.out.println("2. Manage Land");
+                System.out.println("3. Manage Transaction");
+                System.out.println("4. Land Record");
+                System.out.println("5. Logout");
+                System.out.print("Enter your choice: ");
+            	
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // Consume the newline character
 
-                // scanner.close();
                 switch (choice) {
                     case 1:
                         mu.manageUserMenu();

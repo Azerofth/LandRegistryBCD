@@ -13,14 +13,15 @@ import model.User;
 public class customer {  	
 	
 	static boolean isRunning = true;
-	Scanner scanner = new Scanner(System.in);
-	LoginHandler login = LoginHandler.getInstance();
-	UserHandler uh = new UserHandler();
-	LandInfoHandler lih = new LandInfoHandler();
-	landConveyance lc = new landConveyance();
-	
+
 	public void customerMenu() 
 	{
+		Scanner scanner = new Scanner(System.in);
+		LoginHandler login = LoginHandler.getInstance();
+		UserHandler uh = new UserHandler();
+		LandInfoHandler lih = new LandInfoHandler();
+		landConveyance lc = new landConveyance();
+		
     	User currentUser = login.getCurrentUser();
     	System.out.println("Welcome, " + currentUser.getUsername() + "!");
 
@@ -53,14 +54,11 @@ public class customer {
 				    	System.out.println("\nUser Land Record");
 				    	System.out.println("-".repeat(50));
 				    	lc.userSellLand();
-
 				        break;
 				    case 4:
 				    	System.out.println("\nBuy Land");
 				    	System.out.println("-".repeat(50));
 				    	lc.userBuyLand();
-				        //buyLand();
-				    			// read land ONSALE
 				        break;
 				    case 5:
 				        isRunning = login.logout();
@@ -68,6 +66,7 @@ public class customer {
 				    default:
 				        System.out.println("Invalid choice. Please enter a valid option.");
 				}
+				
 			} catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid integer.");
                 scanner.nextLine(); // Consume the invalid input
