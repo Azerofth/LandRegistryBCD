@@ -63,10 +63,10 @@ public class admin {
                         isRunning = login.logout();
                         break;
                     default:
-                        System.out.println("Invalid choice. Please enter a valid option.");
+                        System.out.println("** Invalid choice. Please enter a valid option.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
+                System.out.println("** Invalid input. Please enter a valid integer. **");
                 scanner.nextLine(); // Consume the invalid input
             } catch (Exception e) {
                 System.out.println("An error occurred: " + e.getMessage());

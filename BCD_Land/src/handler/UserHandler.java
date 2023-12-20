@@ -39,65 +39,110 @@ public class UserHandler {
          return maxID + 1;
      }
     
+    private boolean isUsernameValid(List<User> users, String username) {
+        // Check if the username contains at least one non-digit character and is not taken
+        return username.matches(".*[a-zA-Z].*") && users.stream().noneMatch(user -> user.getUsername().equals(username));
+    }
+    
     public void addUser(int mode) {
         Scanner scanner = new Scanner(System.in);
 
         List<User> users = readUsers();
-    	
-    	if (mode == 1) {
-    		//customer use
-    	} else {
-    		//printUser();	//admin use
-    	}
-        
-        int userID = generateNewUserID(users);
-        userType userType = enuum.userType.CUSTOMER;  // Only 1 admin
-        
-        System.out.printf("User ID #%d", userID);
-        
-        System.out.print("\nUsername: ");
-        String username = scanner.nextLine();
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
-        System.out.print("Age: ");
-        int age = scanner.nextInt();
-        
-        // Consume the newline character left in the buffer
-        scanner.nextLine(); 
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
-        System.out.print("Phone Number: ");
-        String phoneNumber = scanner.nextLine();
-        System.out.print("Occupation: ");
-        String occupation = scanner.nextLine();
+        if (mode == 1) {
+            // customer use
+        } else {
+            printUser();
+        }
+
+        int userID = generateNewUserID(users);
+        userType userType = enuum.userType.CUSTOMER; // Only 1 admin
+
+        System.out.printf("User ID #%d", userID);
+        System.out.print("\n");
+
+        String username;
+        do {
+            System.out.print("Username\t: ");
+            username = scanner.nextLine().toLowerCase();
+            if (!isUsernameValid(users, username)) {
+                System.out.println("** Username is invalid. Please choose a different username. **");
+            }
+        } while (!isUsernameValid(users, username));
+
+        String password;
+        do {
+            System.out.print("Password\t: ");
+            password = scanner.nextLine().toLowerCase();
+            if (password.length() < 8) {
+                System.out.println("** Password must be at least 8 characters long. **");
+            }
+        } while (password.length() < 8);
+
+        int age;
+        do {
+            System.out.print("Age\t\t: ");
+            age = scanner.nextInt();
+            if (age < 18 || age > 120) {
+                System.out.println("** Age must be between 18 and 120. **");
+            }
+        } while (age < 18 || age > 120);
+
+        scanner.nextLine();
+
+        String email;
+        do {
+            System.out.print("Email\t\t: ");
+            email = scanner.nextLine().toLowerCase();
+            if (!email.contains("@")) {
+                System.out.println("** Invalid email. **");
+            }
+        } while (!email.contains("@"));
+
+        String phoneNumber;
+        do {
+            System.out.print("Phone Number\t: ");
+            phoneNumber = scanner.nextLine();
+            if (phoneNumber.length() < 10) {
+                System.out.println("** Phone number must be at least 10 characters long. **");
+            }
+        } while (phoneNumber.length() < 10);
+
+        String occupation;
+        do {
+            System.out.print("Occupation\t: ");
+            occupation = scanner.nextLine();
+            if (!occupation.matches("^[a-zA-Z]+$")) {
+                System.out.println("** Invalid input. Please enter only text. **");
+            }
+        } while (!occupation.matches("^[a-zA-Z]+$"));
 
         // Create a new user object
         User newUser = new User(userID, userType, username, password, age, email, phoneNumber, occupation);
 
         // Add the new user to the list
         FileHandler.addObject(newUser, USER_FILE);
-        System.out.println("** New user registered successfully. **\n");
+        System.out.println("** New user registered successfully. **");
     }
 
     public void modifyUser(int mode) {
         Scanner scanner = new Scanner(System.in);
         LoginHandler login = LoginHandler.getInstance();
-        
+
         String userInputToModify = null;
         User userToModify = null;
         User updatedUser = null;
-        
+
         // Display existing users for reference
         List<User> users = readUsers();
 
         if (mode == 1) {
-        	User currentUser = login.getCurrentUser();
-        	userInputToModify = currentUser.getUsername();
+            User currentUser = login.getCurrentUser();
+            userInputToModify = currentUser.getUsername();
             login.displayCurrentUser();
-            //customer use
+            // customer use
         } else {
-            printUser(); //admin use
+            printUser(); // admin use
 
             // Collect user input for the user to modify
             System.out.print("Enter the username or user ID to modify: ");
@@ -112,22 +157,64 @@ public class UserHandler {
                 break;
             }
         }
-        
+
         if (userToModify != null) {
             // Collect updated user details from user input
-            System.out.println("New username\t\t: ");
-            String newUsername = scanner.nextLine();
-            System.out.println("New password\t\t: ");
-            String newPassword = scanner.nextLine();
-            System.out.println("New age\t\t\t: ");
-            int newAge = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("New email\t\t: ");
-            String newEmail = scanner.nextLine();
-            System.out.println("New phone number\t: ");
-            String newPhoneNumber = scanner.nextLine();
-            System.out.println("New occupation\t\t: ");
-            String newOccupation = scanner.nextLine();
+            System.out.print("New username\t\t: ");
+            String newUsername;
+            do {
+                newUsername = scanner.nextLine().toLowerCase();
+                if (!isUsernameValid(users, newUsername)) {
+                    System.out.println("** Username is invalid or already taken. Please choose a different username. **");
+                }
+            } while (!isUsernameValid(users, newUsername));
+
+            // Validate and get a valid password
+            String newPassword;
+            do {
+                System.out.print("New password\t\t: ");
+                newPassword = scanner.nextLine().toLowerCase();
+                if (newPassword.length() < 8) {
+                    System.out.println("** Password must be at least 8 characters long. **");
+                }
+            } while (newPassword.length() < 8);
+
+            int newAge;
+            do {
+                System.out.print("New age\t\t\t: ");
+                newAge = scanner.nextInt();
+                scanner.nextLine();
+                if (newAge < 18 || newAge > 120) {
+                    System.out.println("** Age must be between 18 and 120. **");
+                }
+            } while (newAge < 18 || newAge > 120);
+
+            String newEmail;
+            do {
+                System.out.print("New email\t\t: ");
+                newEmail = scanner.nextLine().toLowerCase();
+                if (!newEmail.contains("@")) {
+                    System.out.println("** Invalid email. **");
+                }
+            } while (!newEmail.contains("@"));
+
+            String newPhoneNumber;
+            do {
+                System.out.print("New phone number\t: ");
+                newPhoneNumber = scanner.nextLine();
+                if (newPhoneNumber.length() < 10) {
+                    System.out.println("** Phone number must be at least 10 characters long. **");
+                }
+            } while (newPhoneNumber.length() < 10);
+
+            String newOccupation;
+            do {
+                System.out.print("New occupation\t\t: ");
+                newOccupation = scanner.nextLine();
+                if (!newOccupation.matches("^[a-zA-Z]+$")) {
+                    System.out.println("** Invalid input. Please enter only text. **");
+                }
+            } while (!newOccupation.matches("^[a-zA-Z]+$"));
 
             // Create a new user object with updated details
             updatedUser = new User(
@@ -140,25 +227,24 @@ public class UserHandler {
                     newPhoneNumber,
                     newOccupation
             );
-            
+
             // Replace the old user with the updated user in the list
             users.set(users.indexOf(userToModify), updatedUser);
             // Write the updated user list to the file
             FileHandler.writeData(users, USER_FILE);
 
-            System.out.println("** User modified successfully. **\n");
-            System.out.println(updatedUser);
-            printUser(); // Display updated user list
+            System.out.println("\n\n** User modified successfully. **\n");
         } else {
             System.out.println("** User not found. **\n");
         }
 
         if (mode == 1) {
-        	login.setCurrentUser(updatedUser);
+            login.setCurrentUser(updatedUser);
             login.displayCurrentUser();
-            //customer use
+            // customer use
         }
     }
+
     
 	public void deleteUser() {
         Scanner scanner = new Scanner(System.in);
@@ -186,7 +272,6 @@ public class UserHandler {
             users.remove(userToDelete);
             FileHandler.writeData(users, USER_FILE);
             System.out.println("** User deleted successfully. **\n");
-            printUser();
         } else {
             System.out.println("** User not found. **\n");
         }

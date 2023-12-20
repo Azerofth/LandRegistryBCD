@@ -64,11 +64,11 @@ public class customer {
 				        isRunning = login.logout();
 				        break;
 				    default:
-				        System.out.println("Invalid choice. Please enter a valid option.");
+				        System.out.println("** Invalid choice. Please enter a valid option. **\n");
 				}
 				
 			} catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
+                System.out.println("** Invalid input. Please enter a valid integer. **\n");
                 scanner.nextLine(); // Consume the invalid input
             } catch (Exception e) {
                 System.out.println("An error occurred: " + e.getMessage());

@@ -51,7 +51,7 @@ public class LandInfoHandler {
 
         System.out.printf("\n\n%" + 50 + "s%s%n", "", "Registered Land");
         System.out.println("-".repeat(130));
-        System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s | %-15s%n",
+        System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-18s | %-15s%n",
                 "ID", "Area", "Height", "Volume", "Year", "Owner", "Registered Date", "Condition", "Value", "Status");
         System.out.println("-".repeat(130));
 
@@ -70,48 +70,16 @@ public class LandInfoHandler {
                     int latestOwnerID = latestTransRec.getBuyerID();
                     
                     // Print land information along with the latest regStatus and owner
-                    System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-15s | %-15s%n",
+                    System.out.printf("%-4s | %-9s | %-9s | %-9s | %-5s | %-6s | %-25s | %-10s | %-18s | %-15s%n",
                             landInfo.getLandID(), landInfo.getLandArea(), landInfo.getLandHeight(), landInfo.getLandVolume(),
                             landInfo.getYearOfCon(), latestOwnerID, landInfo.getRegDate(), landInfo.getLandCond(),
-                            landInfo.getValue(), latestLandRec.getRegStatus());
+                            String.format("RM%.2f", landInfo.getValue()), latestLandRec.getRegStatus());
                 }
             }
         }
 
         System.out.println("-".repeat(130));
     }
-
-    
-//    public void displayCurrentLandInfo(int landID) {
-//        List<LandInfo> landInfos = readLandInfo();
-//
-//        List<LandInfo> filteredLandInfos = landInfos.stream()
-//                .filter(landInfo -> landInfo.getLandID() == landID)
-//                .collect(Collectors.toList());
-//
-//        if (filteredLandInfos.size() == 1) {
-//            LandInfo landInfo = filteredLandInfos.get(0);
-//
-//            System.out.println("\n");
-//            System.out.println("*".repeat(50));
-//            System.out.println("Updated Registered Land Information:");
-//            System.out.printf("Land ID #" + landInfo.getLandID() +
-//                    "\nArea\t\t:" + landInfo.getLandArea() +
-//                    "\nHeight\t\t:" + landInfo.getLandHeight() +
-//                    "\nVolume\t\t\t:" + landInfo.getLandVolume() +
-//                    "\nYear\t\t\t:" + landInfo.getYearOfCon() +
-//                    "\nOwner\t\t:" + landInfo.getOwner() +
-//                    "\nRegistered Date\t\t:" + landInfo.getRegDate() +
-//                    "\nCondition\t\t:" + landInfo.getLandCond() +
-//                    "\nValue\t\t:" + landInfo.getValue() + "\n");
-//            System.out.println("*".repeat(50));
-//            System.out.println("\n");
-//        } else if (filteredLandInfos.isEmpty()) {
-//            System.out.println("** Land ID not found. **\n");
-//        } else {
-//            System.out.println("** Multiple entries found for the same Land ID. **\n");
-//        }
-//    }
     
     private static int generateNewLandInfoID(List<LandInfo> landInfos) {
         // Find the maximum userID from existing users and increment by 1
@@ -124,81 +92,132 @@ public class LandInfoHandler {
         return maxID + 1;
     }
 	
-	// do basic input new land first
-	// then add mode for customer usage
+    public void addLandInfo(int mode) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
 
-	// registerLand
-    // mode to pass in, owner
-	public void addLandInfo(int mode) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
-		
         Scanner scanner = new Scanner(System.in);
         LoginHandler login = LoginHandler.getInstance();
         TransHandler th = new TransHandler();
-        
+
         User currentUser = null;
-        
+
         List<LandInfo> landInfo = readLandInfo();
-        
-    	if (mode == 1) {
-    		currentUser = login.getCurrentUser();
-    		printLandInfo(currentUser.getUserID());
-    		//customer use
-    	} else {
-    		printLandInfo(000);	//admin use
-    	}
-        
+
+        if (mode == 1) {
+            currentUser = login.getCurrentUser();
+            printLandInfo(currentUser.getUserID());
+            //customer use
+        } else {
+            printLandInfo(000); //admin use
+        }
+
         int landID = generateNewLandInfoID(landInfo);
         Timestamp regDate = new Timestamp(System.currentTimeMillis());
-        
-        
+
         System.out.printf("\nLand ID #%d", landID);
-        
-        System.out.print("\nLand Area\t\t: ");
-        double landArea = scanner.nextDouble();
-        scanner.nextLine(); 
-        
-        System.out.print("Land Height\t\t: ");
-        double landHeight = scanner.nextDouble();
-        scanner.nextLine(); 
-        
-        System.out.print("Land Volume\t\t: ");
-        double landVolume = scanner.nextDouble();
-        scanner.nextLine(); 
-        
-        System.out.print("Year of Construction\t: ");
-        int yearOfCon = scanner.nextInt();
-        scanner.nextLine(); 
-        
+
+        double landArea;
+        do {
+            System.out.print("\nLand Area\t\t: ");
+            landArea = getValidDoubleInput(scanner);
+            if (landArea < 100) {
+                System.out.println("** Land Area must be at least 100. **");
+            }
+        } while (landArea < 100);
+
+        double landHeight;
+        do {
+            System.out.print("Land Height\t\t: ");
+            landHeight = getValidDoubleInput(scanner);
+            if (landHeight < 100) {
+                System.out.println("** Land Height must be at least 100. **");
+            }
+        } while (landHeight < 100);
+
+        double landVolume;
+        do {
+            System.out.print("Land Volume\t\t: ");
+            landVolume = getValidDoubleInput(scanner);
+            if (landVolume < 500) {
+                System.out.println("** Land Volume must be at least 500. **");
+            }
+        } while (landVolume < 100);
+
+        int yearOfCon;
+        do {
+            System.out.print("Year of Construction\t: ");
+            yearOfCon = getValidIntInput(scanner);
+            if (yearOfCon < 1900 || yearOfCon > 2025) {
+                System.out.println("** Year of Construction must be between 1900 and 2025. **");
+            }
+        } while (yearOfCon < 1900 || yearOfCon > 2025);
+
         int owner;
-		if (mode == 1) {
-	        owner = currentUser.getUserID();			//if customer mode then set currentUser as owner
-		}else {
-	        System.out.print("Owner ID\t\t: ");
-	        owner = scanner.nextInt();
-	        scanner.nextLine(); 
-		}
-        
-        System.out.print("Land Condition (max 5)\t: ");
-        int landCond = scanner.nextInt();
-        scanner.nextLine(); 
-        
-        System.out.print("Value\t\t\t: ");
-        double value = scanner.nextDouble();
-        scanner.nextLine(); 
+        if (mode == 1) {
+            owner = currentUser.getUserID(); //if customer mode then set currentUser as owner
+        } else {
+            do {
+                System.out.print("Owner ID\t\t: ");
+                owner = getValidIntInput(scanner);
+                if (owner == 1 || !isUserIdExisting(owner)) {
+                    System.out.println("** Invalid Owner ID. Please enter a valid ID that exists in user.txt. **");
+                }
+            } while (owner == 1 || !isUserIdExisting(owner));
+        }
+
+        int landCond;
+        do {
+            System.out.print("Land Condition (1 - 5)\t: ");
+            landCond = getValidIntInput(scanner);
+            if (landCond < 1 || landCond > 5) {
+                System.out.println("** Land Condition must be between 1 and 5. **");
+            }
+        } while (landCond < 1 || landCond > 5);
+
+        double value;
+        do {
+            System.out.print("Value\t\t\t: RM ");
+            value = getValidDoubleInput(scanner);
+            if (value < 5000) {
+                System.out.println("** Value must be at least RM5000. **");
+            }
+        } while (value < 5000);
 
         // Create a new user object
         LandInfo newLandInfo = new LandInfo(landID, landArea, landHeight, landVolume, yearOfCon, owner, regDate, landCond, value);
 
         boolean transaction = th.newTransaction(1, landID, owner, 0);
-        
-        if (transaction == true) {
+
+        if (transaction) {
             FileHandler.addObject(newLandInfo, LANDINFO_FILE);
-            
+
             System.out.println("** Successfully registered new land. Please patiently wait for approval. **");
         } else {
-        	System.out.println("** Failed register new land. **");
+            System.out.println("** Failed to register new land. **");
         }
-	}
+    }
+
+    private double getValidDoubleInput(Scanner scanner) {
+        while (!scanner.hasNextDouble()) {
+            System.out.println("** Invalid input. Please enter a number. **");
+            scanner.next(); // Consume the invalid input
+        }
+        return scanner.nextDouble();
+    }
+
+    private int getValidIntInput(Scanner scanner) {
+        while (!scanner.hasNextInt()) {
+            System.out.println("** Invalid input. Please enter an integer. **");
+            scanner.next(); // Consume the invalid input
+        }
+        return scanner.nextInt();
+    }
+
+    private boolean isUserIdExisting(int userID) {
+    	UserHandler uh = new UserHandler();
+        List<User> users = uh.readUsers();
+        return users.stream().anyMatch(user -> user.getUserID() == userID);
+    }
+
 
 	public LandInfo getLandInfoByLandID(int landID) {
 		List<LandInfo> allLandInfos = readLandInfo();
@@ -212,159 +231,4 @@ public class LandInfoHandler {
 		return null;
 	}
 	
-	// search for ID
-	// mode:	admin - 000, customer/seller - 1
-//	public void modifyLandInfo(int mode) {
-//		
-//        Scanner scanner = new Scanner(System.in);
-//        LoginHandler login = LoginHandler.getInstance();
-//        
-//        int landInputToModify = 0;
-//        LandInfo landToModify = null;
-//        LandInfo updatedLandInfo = null;
-//        int newOwner = 0;
-//        
-//        // Display existing users for reference
-//        List<LandInfo> landInfos = readLandInfo();
-//
-//		if (mode == 1) {
-//			printLandInfo(login.getCurrentUserID());
-//            List<LandInfo> filteredLandInfos = landInfos.stream()
-//                    .filter(landInfo -> landInfo.getOwner() == login.getCurrentUserID())
-//                    .collect(Collectors.toList());
-//            landInfos = filteredLandInfos;
-//		}else {
-//			printLandInfo(000);
-//		}
-//		
-//        System.out.print("Enter Land ID to modify: ");
-//        landInputToModify = scanner.nextInt();
-//        scanner.nextLine();
-//    
-//        // Find the user with the specified username or user ID
-//	    for (int i = 0; i < landInfos.size(); i++) {
-//	        LandInfo landInfo = landInfos.get(i);
-//	        if (landInfo.getLandID() == landInputToModify) {
-//	        	landToModify = landInfo;
-//	            break;
-//	        }
-//	    }
-//
-//	       if (landToModify != null) {
-//	            // Collect updated user details from user input
-//	           System.out.print("\nNew Land Area\t\t\t: ");
-//	           double newLandArea = scanner.nextDouble();
-//	           scanner.nextLine(); 
-//	           
-//	           System.out.print("New Land Height\t\t\t: ");
-//	           double newLandHeight = scanner.nextDouble();
-//	           scanner.nextLine(); 
-//	           
-//	           System.out.print("New Land Volume\t\t\t: ");
-//	           double newLandVolume = scanner.nextDouble();
-//	           scanner.nextLine(); 
-//	           
-//	           System.out.print("New Year of Construction\t: ");
-//	           int newYearOfCon = scanner.nextInt();
-//	           scanner.nextLine(); 
-//	           
-//	           if (mode == 000) {
-//		           System.out.print("New Owner ID\t\t\t: ");			//if customer mode then set currentUser as owner
-//		           newOwner = scanner.nextInt();
-//		           scanner.nextLine(); 
-//	           } else {
-//	        	   newOwner = login.getCurrentUserID();
-//	           }
-//	           
-//	           System.out.print("New Land Condition (max 5)\t: ");
-//	           int newLandCond = scanner.nextInt();
-//	           scanner.nextLine(); 
-//	           
-//	           System.out.print("New Value\t\t\t: ");
-//	           double newValue = scanner.nextDouble();
-//	           scanner.nextLine(); 
-//
-//	            // Create a new LandInfo object with updated details
-//	            updatedLandInfo = new LandInfo(
-//	            		landToModify.getLandID(),
-//	            		newLandArea,
-//	            		newLandHeight,
-//	            		newLandVolume,
-//	            		newYearOfCon,
-//	            		newOwner,
-//	            		landToModify.getRegDate(),
-//	            		newLandCond,
-//	            		newValue
-//	            );
-//	            
-//	            // Replace the old user with the updated user in the list
-//	            landInfos.set(landInfos.indexOf(landToModify), updatedLandInfo);
-//	            // Write the updated user list to the file
-//	            FileHandler.writeData(landInfos, LANDINFO_FILE);
-//
-//	            System.out.println("** Land Information modified successfully. **");
-//	            System.out.println(updatedLandInfo);
-//	            
-//	            printLandInfo(mode); // Display updated user list
-//	        } else {
-//	            System.out.println("** Land not found. **");
-//	        }
-//	}
-	
-	
-	//note to create landRec when transferation happen
-//	public void newLandOwner(int landID, int buyerID) {
-//        
-//        int landInputToModify = 0;
-//        LandInfo landToModify = null;
-//        LandInfo updatedLandInfo = null;
-//        int newOwner = 0;
-//        
-//        // Display existing users for reference
-//        List<LandInfo> landInfos = readLandInfo();
-//        
-//        landInputToModify = landID;
-//    
-//        // Find the user with the specified username or user ID
-//	    for (int i = 0; i < landInfos.size(); i++) {
-//	        LandInfo landInfo = landInfos.get(i);
-//	        if (landInfo.getLandID() == landInputToModify) {
-//	        	landToModify = landInfo;
-//	            break;
-//	        }
-//	    }
-//
-//	       if (landToModify != null) {
-//	    	   System.out.printf("\nLand ID to update: %d", landToModify.getLandID());
-//
-//	    	   int pastOwner = landToModify.getOwner();
-//	    	   System.out.printf("\nPast Owner: %d", pastOwner);
-//	    	   newOwner = buyerID;
-//	    	   System.out.printf("\nNew Owner: %d", newOwner);
-//	    	   
-//	            // Create a new LandInfo object with updated details
-//	            updatedLandInfo = new LandInfo(
-//	            		landToModify.getLandID(),
-//	            		landToModify.getLandArea(),
-//	            		landToModify.getLandHeight(),
-//	            		landToModify.getLandVolume(),
-//	            		landToModify.getYearOfCon(),
-//	            		newOwner,
-//	            		landToModify.getRegDate(),
-//	            		landToModify.getLandCond(),
-//	            		landToModify.getValue()
-//	            );
-//	            
-//	            // Replace the old user with the updated user in the list
-//	            landInfos.set(landInfos.indexOf(landToModify), updatedLandInfo);
-//	            // Write the updated user list to the file
-//	            FileHandler.writeData(landInfos, LANDINFO_FILE);
-//
-//	            System.out.println("** Land Information modified successfully. **");
-//	            displayCurrentLandInfo(updatedLandInfo.getLandID()); // Display updated
-//	            
-//	        } else {
-//	            System.out.println("Land not found.");
-//	        }
-//	}
 }

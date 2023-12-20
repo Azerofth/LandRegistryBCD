@@ -1,5 +1,7 @@
 package landregistry;
 
+import java.util.InputMismatchException;
+
 //includes main menu, login, register, logout
 
 import java.util.Scanner;
@@ -19,34 +21,33 @@ public class Main {
     }
 
     private static void welcomeMenu() {
-    	Scanner scanner = new Scanner(System.in);
-    	
-        System.out.println("Land Registration System");
-        System.out.println("-".repeat(50));
-        System.out.println("1. Login");
-        System.out.println("2. Register");
-        System.out.println("3. Exit");
-        System.out.print("Enter your choice: ");
-        
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
-        
-        //scanner.close();
-
-        switch (choice) {
-            case 1:
-                login.login();
-                break;
-            case 2:
-                login.register();
-                break;
-            case 3:
-                isRunning = false;
-                System.out.println("\n** Exiting Land Registration System. **");
-                break;
-            default:
-                System.out.println("** Invalid choice. Please enter a valid option. **");
-        }
+    	try {
+			Scanner scanner = new Scanner(System.in);
+			System.out.println("Land Registration System");
+			System.out.println("-".repeat(50));
+			System.out.println("1. Login");
+			System.out.println("2. Register");
+			System.out.println("3. Exit");
+			System.out.print("Enter your choice: ");
+			int choice = scanner.nextInt();
+			scanner.nextLine(); // Consume the newline character
+			switch (choice) {
+			case 1:
+				login.login();
+				break;
+			case 2:
+				login.register();
+				break;
+			case 3:
+				isRunning = false;
+				System.out.println("\n** Exiting Land Registration System. **");
+				break;
+			default:
+				System.out.println("** Invalid choice. Please enter a valid option. **\n");
+			}
+		} catch (InputMismatchException e) {
+			System.out.println("** Invalid input. Please enter a valid integer. **\n");
+		}
 
     }
 }

@@ -63,41 +63,28 @@ public class landConveyance {
 
 	    List<LandRec> landRecList = new ArrayList<>();
 
-	    if (mode == 1) {
-	        for (LandInfo landInfo : landInfos) {
-	            int landID = landInfo.getLandID();
-	            LandRec latestLandRec = latestLandRecs.get(latestRecIDs.getOrDefault(landID, 0));
+	    for (LandInfo landInfo : landInfos) {
+	        int landID = landInfo.getLandID();
+	        LandRec latestLandRec = latestLandRecs.get(latestRecIDs.getOrDefault(landID, 0));
 
-	            // current user and on sale
-	            if (latestLandRec != null && latestLandRec.getOwnerID() == ownerID && latestLandRec.getLandStatus() == enuum.landStatus.ONSALE) {
-	                landRecList.add(latestLandRec);
+	        // Check if the transaction status is not PENDING
+	        if (latestLandRec != null) {
+	            TransRec transRec = th.getTransRecByTransID(latestLandRec.getTransID());
+	            if (transRec != null && transRec.getTranStatus() == enuum.status.PENDING) {
+	                continue; // Skip the land if the transaction status is PENDING
 	            }
 	        }
-	    } else if (mode == 2) {
-	        for (LandInfo landInfo : landInfos) {
-	            int landID = landInfo.getLandID();
-	            LandRec latestLandRec = latestLandRecs.get(latestRecIDs.getOrDefault(landID, 0));
-
-	            // current user and owned (not on sale)
-	            if (latestLandRec != null && latestLandRec.getOwnerID() == ownerID && latestLandRec.getLandStatus() == enuum.landStatus.OWNED) {
-	                landRecList.add(latestLandRec);
-	            }
-	        }
-	    } else if (mode == 3) {
-	        for (LandInfo landInfo : landInfos) {
-	            int landID = landInfo.getLandID();
-	            LandRec latestLandRec = latestLandRecs.get(latestRecIDs.getOrDefault(landID, 0));
-
-	            // not current user but on sale
-	            if (latestLandRec != null && latestLandRec.getOwnerID() != ownerID && latestLandRec.getLandStatus() == enuum.landStatus.ONSALE) {
-	                landRecList.add(latestLandRec);
-	            }
+	        // Apply mode-specific filters
+	        if ((mode == 1 && latestLandRec != null && latestLandRec.getOwnerID() == ownerID && latestLandRec.getLandStatus() == enuum.landStatus.ONSALE) ||
+	            (mode == 2 && latestLandRec != null && latestLandRec.getOwnerID() == ownerID && latestLandRec.getLandStatus() == enuum.landStatus.OWNED) ||
+	            (mode == 3 && latestLandRec != null && latestLandRec.getOwnerID() != ownerID && latestLandRec.getLandStatus() == enuum.landStatus.ONSALE)) {
+	            landRecList.add(latestLandRec);
 	        }
 	    }
-
 	    return landRecList;
 	}
 
+	
 	
 //	mode 1, filters for "My Onsale Land" (current user and on sale).
 //	mode 2, filters for "My Owned Land" (current user and owned, not on sale).
@@ -105,6 +92,7 @@ public class landConveyance {
 	
 	public void printLandInfoWLandRec(int mode, List<LandRec> landRecList, int ownerID) {
 	    LandInfoHandler lih = new LandInfoHandler();
+	    TransHandler th = new TransHandler();
 	    String title = "";
 
 	    if (mode == 1) {
@@ -126,6 +114,12 @@ public class landConveyance {
 	        LandInfo landInfo = lih.getLandInfoByLandID(landRec.getLandID());
 
 	        if (landInfo != null) {
+	            // Check if the transaction status is not PENDING
+	            TransRec transRec = th.getTransRecByTransID(landRec.getTransID());
+	            if (transRec != null && transRec.getTranStatus() == enuum.status.PENDING) {
+	                continue; // Skip the land if the transaction status is PENDING
+	            }
+
 	            // Get the latest owner information from LandRec
 	            int latestOwnerID = landRec.getOwnerID();
 
@@ -172,9 +166,13 @@ public class landConveyance {
 	            if (isValidLandID) {
 	                // Land ID is valid, create a new transaction
 	                final int landID = selectedLandID; // effectively final
-	                th.newTransaction(2, landID, currentUser.getUserID(), 0); // set as sellerID 0 because not sold yet
-
-	                System.out.println("\n** Land with ID " + landID + " has been put on sale. **");
+	                boolean transactionResult = th.newTransaction(2, landID, currentUser.getUserID(), 0); // set as sellerID 0 because not sold yet
+	                
+	                if (transactionResult == true) {
+	                	System.out.println("\n** Land #" + landID + " has been put on sale. **");
+	                } else {
+	                	System.out.println("\n** Land #" + landID + " failed to put on sale. **");
+	                }
 	                break;
 	            } else {
 	                System.out.println("\n** Invalid Land ID. Please enter a valid Land ID from the list. **");
@@ -184,8 +182,6 @@ public class landConveyance {
 	        System.out.println("\n** No land is put on sale. **");
 	    }
 	}
-
-
 
 	public void userBuyLand() throws InvalidKeyException, NoSuchAlgorithmException, SignatureException {
 	    Scanner scanner = new Scanner(System.in);
@@ -243,17 +239,4 @@ public class landConveyance {
 	        System.out.println("\n** No land is purchased. **");
 	    }
 	}
-
-
-
-	
-	// buy land
-	// display ALL land ON SALE & RecID's TransID's transaction COMPLETE
-	// select landID
-	// transaction
-	// approve transaction
-	// set landrec with buyer ID
-	
-	//check if owner changed
-
 }
