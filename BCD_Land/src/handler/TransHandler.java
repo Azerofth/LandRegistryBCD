@@ -190,8 +190,12 @@ public class TransHandler {
                     // Set transaction status to PENDING as it needs approval
                     status tranStatus = enuum.status.PENDING;
 
+                    
+                    //temp signature help me
+                    byte[] adminSignature = null;
+                    
                     // Create a new transaction object
-                    TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus);
+                    TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus, adminSignature);
                     
                     // Add the new transaction to the list
                     FileHandler.addObject(newTransaction, TRANSACTION_FILE);
@@ -214,9 +218,70 @@ public class TransHandler {
         return false;
     }
 
-    // update status to COMPLETE
-	// user can choose to approve all transactions by input specific transRecID to approve
-	
+    
+    // for digital signature, under construction
+//    public void approveTransaction() {
+//        Scanner scanner = new Scanner(System.in);
+//
+//        // Read Transactions
+//        List<TransRec> allTransactions = readTransRec();
+//
+//        // Display a list of transactions pending approval
+//        List<TransRec> pendingTransactions = allTransactions.stream()
+//                .filter(transaction -> transaction.getTranStatus() == enuum.status.PENDING)
+//                .collect(Collectors.toList());
+//
+//        if (!pendingTransactions.isEmpty()) {
+//            // Display Transaction IDs with pending status
+//            System.out.println("Transaction IDs with pending status:");
+//            pendingTransactions.forEach(transaction ->
+//                    System.out.println("Transaction ID # " + transaction.getTransID()));
+//
+//            // Ask the user to input Transaction ID to approve (0 to approve all)
+//            System.out.print("Transaction ID to approve (0 to approve all): ");
+//            int transIDToApprove = scanner.nextInt();
+//
+//            if (transIDToApprove == 0) {
+//                // Approve all transactions
+//                pendingTransactions.forEach(transaction -> {
+//                    // Verify the digital signature before approving
+//                    boolean isSignatureValid = MySignature.isTextAndSignatureValid(transaction.getDataToSign(), transaction.getAdminSignature(), MyKeyPair.getPublicKeyForAdmin());
+//                    if (isSignatureValid) {
+//                        transaction.setTranSMySignaturetatus(enuum.status.COMPLETE);
+//                    } else {
+//                        System.out.println("** Invalid signature for Transaction ID #" + transaction.getTransID() + ". Approval failed. **");
+//                    }
+//                });
+//                System.out.println("** All transactions approved. **");
+//            } else {
+//                // Approve a specific transaction by updating its status
+//                TransRec transactionToApprove = pendingTransactions.stream()
+//                        .filter(transaction -> transaction.getTransID() == transIDToApprove)
+//                        .findFirst()
+//                        .orElse(null);
+//
+//                if (transactionToApprove != null) {
+//                    // Verify the digital signature before approving
+//                    boolean isSignatureValid = MySignature.isTextAndSignatureValid(transactionToApprove.getDataToSign(), transactionToApprove.getAdminSignature(), MyKeyPair.getPublicKeyForAdmin());
+//                    if (isSignatureValid) {
+//                        transactionToApprove.setTranStatus(enuum.status.COMPLETE);
+//                        System.out.println("** Transaction ID #" + transIDToApprove + " approved. **");
+//                    } else {
+//                        System.out.println("** Invalid signature for Transaction ID #" + transactionToApprove.getTransID() + ". Approval failed. **");
+//                    }
+//                } else {
+//                    System.out.println("** Transaction not found or already approved. **");
+//                }
+//            }
+//
+//            // Update the transaction file with the modified transactions
+//            FileHandler.writeData(allTransactions, TRANSACTION_FILE);
+//        } else {
+//            System.out.println("** No pending transactions found. **");
+//        }
+//    }
+    
+
     public void approveTransaction() {
         Scanner scanner = new Scanner(System.in);
 
