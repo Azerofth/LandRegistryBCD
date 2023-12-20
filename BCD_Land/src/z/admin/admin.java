@@ -14,10 +14,10 @@ import z.customer.landConveyance;
 
 public class admin {
 
-    static boolean isRunning = true;
-
     public void adminMenu() 
     {
+    	boolean isRunning = true;
+    	
         Scanner scanner = new Scanner(System.in);
         LoginHandler login = LoginHandler.getInstance();
         UserHandler uh = new UserHandler();

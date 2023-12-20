@@ -11,11 +11,11 @@ import model.User;
 
 //if login success
 public class customer {  	
-	
-	static boolean isRunning = true;
 
 	public void customerMenu() 
 	{
+		boolean isRunning = true;
+		
 		Scanner scanner = new Scanner(System.in);
 		LoginHandler login = LoginHandler.getInstance();
 		UserHandler uh = new UserHandler();
