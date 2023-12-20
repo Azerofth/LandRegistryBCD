@@ -21,7 +21,7 @@ public class TransHandler {
 	private static final String TRANSACTION_FILE = "transaction.txt";
 	
     private static final String ALGORITHM = "SHA256WithRSA";
-    private static final DigitalSignature digitalSignature = new DigitalSignature();
+    private static final DigitalSignature digitalSignature = DigitalSignature.getInstance();
 
     public List<TransRec> readTransRec() {
         return FileHandler.readData(TRANSACTION_FILE);

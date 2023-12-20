@@ -1,17 +1,28 @@
 package blockchain;
 
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.*;
 
 public class DigitalSignature {
     private static final String ALGORITHM = "SHA256WithRSA";
+    private static final String KEY_PAIR_FILE = "keypair.dat";
+    
     private static DigitalSignature instance;
     private Signature signature;
     private KeyPair keyPair;
     
-    public DigitalSignature() {
-        // Generate key pair only once when the instance is created
-        keyPair = generateKeyPair();
+    private DigitalSignature() {
+        // Load existing key pair or generate a new one
+        keyPair = loadKeyPair(KEY_PAIR_FILE);
+        if (keyPair == null) {
+            keyPair = generateKeyPair();
+            saveKeyPair(KEY_PAIR_FILE, keyPair);
+        }
     }
 
     // Singleton pattern: Get the instance of DigitalSignature
@@ -20,6 +31,25 @@ public class DigitalSignature {
             instance = new DigitalSignature();
         }
         return instance;
+    }
+
+    // Load key pair from file
+    private KeyPair loadKeyPair(String fileName) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            return (KeyPair) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            return null; // File not found or error loading, return null
+        }
+    }
+
+    // Save key pair to file
+    private void saveKeyPair(String fileName, KeyPair keyPair) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(keyPair);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error saving key pair.");
+        }
     }
     
     // Generate key pair for digital signature
