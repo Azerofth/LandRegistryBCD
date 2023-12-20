@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import blockchain.Blockchain;
 import enuum.landStatus;
 import enuum.status;
 import model.LandRec;
@@ -132,6 +133,7 @@ public class LandRecHandler {
         
         System.out.println("** Land Record Created. **");
         
+
         displayCurrentLandRecByID(recID);
     }
     
@@ -169,6 +171,9 @@ public class LandRecHandler {
                 landRegistrationsToApprove.forEach(landRec ->
                         landRec.setRegStatus(enuum.status.COMPLETE));
                 System.out.println("** All land registrations approved. **");
+                String ApprovedRegistration = landRegistrationsToApprove.toString();
+                Blockchain.createBlockchain(ApprovedRegistration);
+                
             } else {
                 // Approve a specific land registration by updating its status
                 LandRec landRegistrationToApprove = landRegistrationsToApprove.stream()
@@ -179,6 +184,8 @@ public class LandRecHandler {
                 if (landRegistrationToApprove != null) {
                     landRegistrationToApprove.setRegStatus(enuum.status.COMPLETE);
                     System.out.println("** LandID #" + landIDToApprove + " registration approved. **");
+                    String ApprovedRegistration = landRegistrationToApprove.toString();
+                    Blockchain.createBlockchain(ApprovedRegistration);
                 } else {
                     System.out.println("** Land registration not found or already approved. **");
                 }

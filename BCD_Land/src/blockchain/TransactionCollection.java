@@ -1,10 +1,11 @@
 package blockchain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionCollection {
-private final int SIZE = 10;
+public class TransactionCollection implements Serializable {
+	private final int SIZE = 10;
 	
 	public String merkleRoot;
 	
