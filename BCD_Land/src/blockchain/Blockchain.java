@@ -1,14 +1,9 @@
 package blockchain;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.LinkedList;
 
 import com.google.gson.GsonBuilder;
-
-
 public class Blockchain {
 	private static LinkedList<Block>db = new LinkedList<>();
 
@@ -20,7 +15,7 @@ public class Blockchain {
 	}
 	public String chainFile;
 	
-	private Blockchain(String chainFile) {
+	public Blockchain(String chainFile) {
 		super();
 		this.chainFile = chainFile;
 		System.out.println("> Blockchain object is created!");
@@ -60,6 +55,16 @@ public class Blockchain {
 			e.printStackTrace();
 		}
 	}
+	
+	public void persistTextFile() {
+        try (FileWriter writer = new FileWriter(this.chainFile + ".txt")) {
+            String chain = new GsonBuilder().setPrettyPrinting().create().toJson(db);
+            writer.write(chain);
+            System.out.println(">> Text file is updated!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	public void distribute()
 	{
 		String chain = new GsonBuilder().setPrettyPrinting().create().toJson(db);
@@ -67,4 +72,25 @@ public class Blockchain {
 	}
 	private static String masterFolder = "master";
 	private static String fileName=masterFolder+"/chain.bin";
+	
+	public static void createBlockchain(String data) {
+	Blockchain bc = Blockchain.getInstance(fileName);
+	if (!new File(masterFolder).exists()) {
+		System.err.println("> creating Blockchain binary!");
+		new File(masterFolder).mkdir();
+		bc.genesis();
+		}
+	else {
+		String line1=data;
+		TransactionCollection tranxLst = new TransactionCollection();
+		tranxLst.add(line1);
+		String previousHash = bc.get().getLast().getHeader().getCurrentHash();
+		Block b1 = new Block(previousHash, "Root");
+		b1.setTransactions(tranxLst);
+		bc.nextBLock(b1);
+//		System.out.println(b1);
+		bc.distribute();
+		bc.persistTextFile();
+	}
+}
 }

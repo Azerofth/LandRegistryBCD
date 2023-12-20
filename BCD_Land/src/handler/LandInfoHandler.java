@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import blockchain.Blockchain;
 import enuum.status;
 import model.LandInfo;
 import model.LandRec;
@@ -195,6 +196,8 @@ public class LandInfoHandler {
             FileHandler.addObject(newLandInfo, LANDINFO_FILE);
             
             System.out.println("** Successfully registered new land. Please patiently wait for approval. **");
+            String newLand = newLandInfo.toString();
+            Blockchain.createBlockchain(newLand);
         } else {
         	System.out.println("** Failed register new land. **");
         }

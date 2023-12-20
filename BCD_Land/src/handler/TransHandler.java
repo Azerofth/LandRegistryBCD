@@ -14,10 +14,11 @@ import enuum.status;
 import enuum.transType;
 import model.LandInfo;
 import model.TransRec;
+import blockchain.*;
 
 public class TransHandler {
     static LoginHandler login = LoginHandler.getInstance();
-
+    
 	private static final String TRANSACTION_FILE = "transaction.txt";
 	
     private static final String ALGORITHM = "SHA256WithRSA";
@@ -202,8 +203,19 @@ public class TransHandler {
                     
                     myDigitalSignature = digitalSignature.generateDigitalSignature(transactionData);
 
+<<<<<<< Updated upstream
                     // Create a new transaction object
                     TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus, myDigitalSignature);
+=======
+                    //temp signature help me
+                    byte[] adminSignature = null;
+                    
+                    // Create a new transaction object
+                    TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus, adminSignature);
+                    String transactionString = newTransaction.toString();
+                    System.out.println(transactionString);
+//                    Blockchain.createBlockchain(transactionString);
+>>>>>>> Stashed changes
                     
                     // Add the new transaction to the list
                     FileHandler.addObject(newTransaction, TRANSACTION_FILE);
@@ -578,4 +590,60 @@ public class TransHandler {
 //            System.out.println("** No pending transactions found. **");
 //        }
 //    }
+<<<<<<< Updated upstream
 //}
+=======
+    
+
+    public void approveTransaction() {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read Transactions
+        List<TransRec> allTransactions = readTransRec();
+
+        // Display a list of transactions pending approval
+        List<TransRec> pendingTransactions = allTransactions.stream()
+                .filter(transaction -> transaction.getTranStatus() == enuum.status.PENDING)
+                .collect(Collectors.toList());
+
+        if (!pendingTransactions.isEmpty()) {
+            // Display Transaction IDs with pending status
+            System.out.println("Transaction IDs with pending status:");
+            pendingTransactions.forEach(transaction ->
+                    System.out.println("Transaction ID # " + transaction.getTransID()));
+
+            // Ask the user to input Transaction ID to approve (0 to approve all)
+            System.out.print("Transaction ID to approve (0 to approve all): ");
+            int transIDToApprove = scanner.nextInt();
+
+            if (transIDToApprove == 0) {
+                // Approve all transactions
+                pendingTransactions.forEach(transaction ->
+                        transaction.setTranStatus(enuum.status.COMPLETE));
+                System.out.println("** All transactions approved. **");
+            } else {
+                // Approve a specific transaction by updating its status
+                TransRec transactionToApprove = pendingTransactions.stream()
+                        .filter(transaction -> transaction.getTransID() == transIDToApprove)
+                        .findFirst()
+                        .orElse(null);
+
+                if (transactionToApprove != null) {
+                    transactionToApprove.setTranStatus(enuum.status.COMPLETE);
+                    System.out.println("** Transaction ID #" + transIDToApprove + " approved. **");
+                    String approvedTransaction = transactionToApprove.toString();
+                    System.out.println(approvedTransaction);
+                    Blockchain.createBlockchain(approvedTransaction);
+                } else {
+                    System.out.println("** Transaction not found or already approved. **");
+                }
+            }
+
+            // Update the transaction file with the modified transactions
+            FileHandler.writeData(allTransactions, TRANSACTION_FILE);
+        } else {
+            System.out.println("** No pending transactions found. **");
+        }
+    }
+}
+>>>>>>> Stashed changes

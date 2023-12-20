@@ -3,7 +3,7 @@ package blockchain;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Block {
+public class Block implements Serializable{
 	//create blocks here
 	/* relationship implementation */ 
 	public Header header;
