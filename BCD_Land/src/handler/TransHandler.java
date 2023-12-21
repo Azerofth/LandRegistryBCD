@@ -223,7 +223,6 @@ public class TransHandler {
                     TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus, myDigitalSignature);
 
                     String transactionString = newTransaction.toString();
-                    System.out.println(transactionString);
                     Blockchain.createBlockchain(transactionString);
                     
                     FileHandler.addObject(newTransaction, TRANSACTION_FILE);
@@ -285,6 +284,8 @@ public class TransHandler {
                     transactionToApprove.setTranStatus(enuum.status.COMPLETE);
 
                     System.out.println("** Transaction ID #" + transIDToApprove + " approved. **");
+                    String transactionString = transactionToApprove.toString();
+                    Blockchain.createBlockchain(transactionString);
                 } else {
                     System.out.println("** Digital signature verification failed for Transaction ID #" + transIDToApprove + ". **");
                 }

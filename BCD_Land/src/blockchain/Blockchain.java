@@ -68,7 +68,7 @@ public class Blockchain {
 	public void distribute()
 	{
 		String chain = new GsonBuilder().setPrettyPrinting().create().toJson(db);
-		System.out.println(chain);
+//		System.out.println(chain);
 	}
 	private static String masterFolder = "master";
 	private static String fileName=masterFolder+"/chain.bin";
