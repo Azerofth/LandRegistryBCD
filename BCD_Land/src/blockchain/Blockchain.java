@@ -1,12 +1,16 @@
 package blockchain;
 
 import java.io.*;
+import java.security.Key;
+import java.util.Base64;
 import java.util.LinkedList;
+import javax.crypto.Cipher;
 
 import com.google.gson.GsonBuilder;
+
 public class Blockchain {
 	private static LinkedList<Block>db = new LinkedList<>();
-
+	private static Cipher cipher;
 	private static Blockchain _instance;
 	public static Blockchain getInstance(String chainFile) {
 		if (_instance == null)
@@ -15,10 +19,25 @@ public class Blockchain {
 	}
 	public String chainFile;
 	
+	public static String encrypt(String data, Key key) throws Exception
+	{
+		String cipherText = null;
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+		byte[] cipherBytes = cipher.doFinal(data.getBytes());
+		cipherText = Base64.getEncoder().encodeToString(cipherBytes);
+		return cipherText;
+	}
+	
 	public Blockchain(String chainFile) {
 		super();
 		this.chainFile = chainFile;
-		System.out.println("> Blockchain object is created!");
+		try {
+            // Create a Cipher object with the AES algorithm
+            cipher = Cipher.getInstance("AES");
+            System.out.println("> Blockchain object is created!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	public void genesis() {
@@ -74,14 +93,22 @@ public class Blockchain {
 	private static String fileName=masterFolder+"/chain.bin";
 	
 	public static void createBlockchain(String data) {
+	Key secretKey = PredefinedCharsSecretKey.create();
 	Blockchain bc = Blockchain.getInstance(fileName);
+    String encryptedChain = null;
+	try {
+		encryptedChain = encrypt(data, secretKey);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	if (!new File(masterFolder).exists()) {
 		System.err.println("> creating Blockchain binary!");
 		new File(masterFolder).mkdir();
 		bc.genesis();
 		}
 	else {
-		String line1=data;
+		String line1=encryptedChain;
 		TransactionCollection tranxLst = new TransactionCollection();
 		tranxLst.add(line1);
 		String previousHash = bc.get().getLast().getHeader().getCurrentHash();
