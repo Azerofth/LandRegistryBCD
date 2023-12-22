@@ -87,7 +87,6 @@ public class Blockchain {
 	public void distribute()
 	{
 		String chain = new GsonBuilder().setPrettyPrinting().create().toJson(db);
-//		System.out.println(chain);
 	}
 	private static String masterFolder = "master";
 	private static String fileName=masterFolder+"/chain.bin";
@@ -115,7 +114,6 @@ public class Blockchain {
 		Block b1 = new Block(previousHash, "Root");
 		b1.setTransactions(tranxLst);
 		bc.nextBLock(b1);
-//		System.out.println(b1);
 		bc.distribute();
 		bc.persistTextFile();
 	}
