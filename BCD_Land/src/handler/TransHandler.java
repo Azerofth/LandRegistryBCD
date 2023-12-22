@@ -220,7 +220,8 @@ public class TransHandler {
                     myDigitalSignature = digitalSignature.generateDigitalSignature(transactionData);
 
                     // Create a new transaction object
-                    TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, amount, paymentMethod, transType, tranStatus, myDigitalSignature);
+                    TransRec newTransaction = new TransRec(transID, landID, buyerID, sellerID, recDate, 
+                    		amount, paymentMethod, transType, tranStatus, myDigitalSignature);
 
                     String transactionString = newTransaction.toString();
                     Blockchain.createBlockchain(transactionString);

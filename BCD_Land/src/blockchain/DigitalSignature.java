@@ -1,6 +1,5 @@
 package blockchain;
 
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,7 +31,19 @@ public class DigitalSignature {
         }
         return instance;
     }
-
+    
+    // Generate key pair for digital signature
+    private KeyPair generateKeyPair() {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            return keyPairGenerator.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error generating key pair.");
+        }
+    }
+    
     // Load key pair from file
     private KeyPair loadKeyPair(String fileName) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
@@ -52,20 +63,19 @@ public class DigitalSignature {
         }
     }
     
-    // Generate key pair for digital signature
-    private KeyPair generateKeyPair() {
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            return keyPairGenerator.generateKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error generating key pair.");
-        }
+    // Getter for public key
+    public PublicKey getPublicKey() {
+        return keyPair.getPublic();
+    }
+
+    // Setter for key pair
+    public void setKeyPair(KeyPair keyPair) {
+        this.keyPair = keyPair;
     }
 
     // Generate digital signature for the transaction
-    public byte[] generateDigitalSignature(String data) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public byte[] generateDigitalSignature(String data) throws NoSuchAlgorithmException, 
+    InvalidKeyException, SignatureException {
         signature = Signature.getInstance(ALGORITHM);
         signature.initSign(keyPair.getPrivate());
         signature.update(data.getBytes());
@@ -81,13 +91,5 @@ public class DigitalSignature {
         return signature.verify(signatureBytes);
     }
 
-    // Getter for public key
-    public PublicKey getPublicKey() {
-        return keyPair.getPublic();
-    }
 
-    // Setter for key pair (for deserialization)
-    public void setKeyPair(KeyPair keyPair) {
-        this.keyPair = keyPair;
-    }
 }
