@@ -1,4 +1,9 @@
 # LandRegistryBCD
-Blockchain development for land registry
 
-cx test
+BCD Group Assignment
+
+Project Description: Implement blockchain for land registry process
+
+Module Name: Blockchain Development
+
+- Java
